@@ -8,6 +8,7 @@ module Lib (
 
 import Data.Maybe
 import Day1 qualified
+import Day2 qualified
 import Text.Printf
 import Text.Read
 
@@ -44,5 +45,6 @@ runSolution dayPart =
     let solver = case dayPart of
           (1, 1) -> Day1.solve1
           (1, 2) -> Day1.solve2
+          (2, 1) -> Day2.solve1
           _ -> const "no solution yet"
      in pure $ solver input
