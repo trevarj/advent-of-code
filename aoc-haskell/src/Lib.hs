@@ -46,5 +46,6 @@ runSolution dayPart =
           (1, 1) -> Day1.solve1
           (1, 2) -> Day1.solve2
           (2, 1) -> Day2.solve1
+          (2, 2) -> Day2.solve2
           _ -> const "no solution yet"
      in pure $ solver input

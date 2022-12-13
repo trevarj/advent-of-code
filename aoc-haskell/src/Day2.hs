@@ -1,4 +1,4 @@
-module Day2 (solve1) where
+module Day2 (solve1, solve2) where
 
 data Hand = Rock | Paper | Scissors deriving (Show, Eq)
 
@@ -36,8 +36,8 @@ wordsToHand _ = error "expected opponent hand and our hand"
 The score for a single round is the score for the shape you selected (1 for Rock, 2 for Paper, and 3 for Scissors)
 plus the score for the outcome of the round (0 if you lost, 3 if the round was a draw, and 6 if you won).
 -}
-play :: (Hand, Hand) -> Int
-play (op, me) =
+play :: Hand -> Hand -> Int
+play op me =
     let selected = handScore me
      in selected + case compare op me of
             LT -> 6
@@ -45,4 +45,37 @@ play (op, me) =
             EQ -> 3
 
 solve1 :: String -> String
-solve1 input = show . sum $ play . wordsToHand . words <$> lines input
+solve1 input = show . sum $ uncurry play . wordsToHand . words <$> lines input
+
+wordsToOutcome :: [String] -> (Hand, Ordering)
+wordsToOutcome [op, outcome] =
+    let opHand = fromStr op
+     in ( opHand
+        , case outcome of
+            "X" -> LT
+            "Y" -> EQ
+            "Z" -> GT
+            _ -> error "expected X, Y or Z"
+        )
+wordsToOutcome _ = error "unexpected words"
+
+-- Solve for our move based on what the outcome should be
+moveSolver :: Hand -> Ordering -> Hand
+moveSolver Rock LT = Scissors
+moveSolver Rock GT = Paper
+moveSolver Rock EQ = Rock
+moveSolver Paper LT = Rock
+moveSolver Paper GT = Scissors
+moveSolver Paper EQ = Paper
+moveSolver Scissors LT = Paper
+moveSolver Scissors GT = Rock
+moveSolver Scissors EQ = Scissors
+
+solve2 :: String -> String
+solve2 input =
+    show . sum $
+        ( (\(opHand, outcome) -> play opHand (moveSolver opHand outcome))
+            . wordsToOutcome
+            . words
+            <$> lines input
+        )
