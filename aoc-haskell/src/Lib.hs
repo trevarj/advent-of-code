@@ -11,6 +11,7 @@ import Data.Maybe
 import Day1 qualified
 import Day2 qualified
 import Day3 qualified
+import Day4 qualified
 import Text.Printf
 import Text.Read
 
@@ -52,5 +53,6 @@ runSolution dayPart =
           (2, 2) -> Day2.solve2
           (3, 1) -> Day3.solve1
           (3, 2) -> Day3.solve2
+          (4, 1) -> Day4.solve1
           _ -> const "no solution yet"
      in pure $ solver input
