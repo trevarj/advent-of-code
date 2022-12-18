@@ -1,4 +1,4 @@
-module Day4 (solve1) where
+module Day4 (solve1, solve2) where
 
 type Ranges = ((Int, Int), (Int, Int))
 
@@ -25,8 +25,20 @@ fullyContained ((a1, a2), (b1, b2))
     a = a1 >= b1 && a2 <= b2
     b = b1 >= a1 && b2 <= a2
 
+overlapping :: Ranges -> Bool
+overlapping ((a1, a2), (b1, b2))
+  | a2 < b1 || b2 < a1 = False
+  | a1 > b2 || b1 > a2 = False
+  | otherwise = True
+
 solve1 :: String -> String
 solve1 input =
   show $
     length . filter (== True) $
       fullyContained . parseLine <$> lines input
+
+solve2 :: String -> String
+solve2 input =
+  show $
+    length . filter (== True) $
+      overlapping . parseLine <$> lines input
