@@ -29,6 +29,7 @@ library
       Day2
       Day3
       Day4
+      Day5
       Lib
   other-modules:
       Paths_aoc_haskell
@@ -39,6 +40,7 @@ library
       base >=4.7 && <5
     , containers
     , split
+    , text
   default-language: Haskell2010
 
 executable aoc-haskell-exe
@@ -53,6 +55,7 @@ executable aoc-haskell-exe
     , base >=4.7 && <5
     , containers
     , split
+    , text
   default-language: Haskell2010
 
 test-suite aoc-haskell-test
@@ -68,4 +71,5 @@ test-suite aoc-haskell-test
     , base >=4.7 && <5
     , containers
     , split
+    , text
   default-language: Haskell2010

@@ -12,6 +12,7 @@ import Day1 qualified
 import Day2 qualified
 import Day3 qualified
 import Day4 qualified
+import Day5 qualified
 import Text.Printf
 import Text.Read
 
@@ -55,5 +56,7 @@ runSolution dayPart =
           (3, 2) -> Day3.solve2
           (4, 1) -> Day4.solve1
           (4, 2) -> Day4.solve2
-          _ -> const "no solution yet"
-     in pure $ solver input
+          (5, 1) -> Day5.solve1
+          -- (5, 2) -> Day5.solve2
+          _ -> pure . const "no solution yet"
+     in solver input

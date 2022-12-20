@@ -31,14 +31,14 @@ overlapping ((a1, a2), (b1, b2))
   | a1 > b2 || b1 > a2 = False
   | otherwise = True
 
-solve1 :: String -> String
+solve1 :: String -> IO String
 solve1 input =
-  show $
+  pure . show $
     length . filter (== True) $
       fullyContained . parseLine <$> lines input
 
-solve2 :: String -> String
+solve2 :: String -> IO String
 solve2 input =
-  show $
+  pure . show $
     length . filter (== True) $
       overlapping . parseLine <$> lines input

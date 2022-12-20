@@ -17,8 +17,8 @@ findDuplicate s = let (left, right) = splitAt (div (length s) 2) s in last $ int
 findCommon :: [String] -> Char
 findCommon s = last . toList $ foldr1 intersection (fromList <$> s)
 
-solve1 :: String -> String
-solve1 input = show . sum $ priority . findDuplicate <$> lines input
+solve1 :: String -> IO String
+solve1 input = pure . show . sum $ priority . findDuplicate <$> lines input
 
-solve2 :: String -> String
-solve2 input = show . sum $ priority . findCommon <$> chunksOf 3 (lines input)
+solve2 :: String -> IO String
+solve2 input = pure . show . sum $ priority . findCommon <$> chunksOf 3 (lines input)
