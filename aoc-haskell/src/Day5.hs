@@ -1,7 +1,7 @@
-module Day5 (solve1) where
+module Day5 (solve1, solve2) where
 
 import Control.Monad (foldM)
-import Data.Char (digitToInt, isLetter, isNumber)
+import Data.Char (isLetter, isNumber)
 import Data.List (transpose)
 import Data.List.Split (splitWhen)
 import Data.Text (Text, chunksOf, dropAround, pack, unpack)
@@ -29,6 +29,14 @@ pushToStack idx stack stacks = do
   -- split at idx, target stack to replace in right side
   let (left, right) = splitAt idx stacks
   -- pop off the head of the right side
+  left ++ ((stack ++ first right) : rest right)
+
+pushToStackRev :: Int -> [a] -> [[a]] -> [[a]]
+pushToStackRev _ [] stacks = stacks
+pushToStackRev idx stack stacks = do
+  -- split at idx, target stack to replace in right side
+  let (left, right) = splitAt idx stacks
+  -- pop off the head of the right side
   left ++ ((reverse stack ++ first right) : rest right)
 
 popFront :: Int -> [a] -> [a]
@@ -50,15 +58,25 @@ popFromStack idx n stacks = do
       popped = take n (first right)
   (popped, left ++ (popFront n (first right) : rest right))
 
-runCommand :: Command -> [[String]] -> IO [[String]]
-runCommand (move, from, to) stacks = do
+runCommand1 :: Command -> [[String]] -> IO [[String]]
+runCommand1 (move, from, to) stacks = do
+  let (popped, newStacks) = popFromStack from move stacks
+  let new = pushToStackRev to popped newStacks
+  -- print new
+  pure new
+
+runCommands1 :: [Command] -> [[String]] -> IO [[String]]
+runCommands1 cmds stacks = foldM (flip runCommand1) stacks cmds
+
+runCommand2 :: Command -> [[String]] -> IO [[String]]
+runCommand2 (move, from, to) stacks = do
   let (popped, newStacks) = popFromStack from move stacks
   let new = pushToStack to popped newStacks
   -- print new
   pure new
 
-runCommands :: [Command] -> [[String]] -> IO [[String]]
-runCommands cmds stacks = foldM (flip runCommand) stacks cmds
+runCommands2 :: [Command] -> [[String]] -> IO [[String]]
+runCommands2 cmds stacks = foldM (flip runCommand2) stacks cmds
 
 headOrBlank :: [String] -> String
 headOrBlank [] = ""
@@ -80,5 +98,17 @@ solve1 input =
    in do
         print stacks
         -- putStr $ reverseCommandParse commands
-        final <- runCommands commands stacks
+        final <- runCommands1 commands stacks
+        pure $ concatMap headOrBlank final
+
+solve2 :: String -> IO String
+solve2 input =
+  let linez = lines input
+      parsed = splitWhen (== "") linez -- split between stacks and commands
+      stacks = map (filter (/= [])) . transpose $ parseStackLines $ pack <$> parsed !! 0
+      commands = parseCommands $ parsed !! 1
+   in do
+        print stacks
+        -- putStr $ reverseCommandParse commands
+        final <- runCommands2 commands stacks
         pure $ concatMap headOrBlank final
