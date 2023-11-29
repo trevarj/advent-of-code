@@ -1,0 +1,6 @@
+(executable
+ (public_name AoC23)
+ (libraries str)
+ (name main))
+
+(env (dev (flags :standard -warn-error -27-32)))

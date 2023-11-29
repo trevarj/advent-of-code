@@ -1,0 +1,18 @@
+(lang dune 3.11)
+
+(name aoc_ocaml)
+
+(generate_opam_files false)
+
+(source
+ (github trevarj/advent_of_code))
+
+(authors "Trevor Arjeski")
+
+(package
+ (name aoc_ocaml)
+ (synopsis "AoC 2023")
+ (description "Advent of Code 2023")
+ (depends ocaml dune))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
