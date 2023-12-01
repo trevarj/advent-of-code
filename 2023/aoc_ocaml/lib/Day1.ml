@@ -23,20 +23,20 @@ let from_chars s = s |> List.to_seq |> of_seq
 let sum list = List.fold_left (fun acc c -> acc + c) 0 list
 let combine_chars (a, b) = make 1 a ^ make 1 b
 
-let combine_first_last_digit s =
-  let chars = to_chars s in
+let combine_first_last_digit chars =
   let first = List.find is_digit chars
   and last = List.find is_digit (List.rev chars) in
   (first, last) |> combine_chars |> int_of_string
 
 let solve_part_1 lines =
-  lines |> List.map combine_first_last_digit |> sum |> string_of_int
+  lines
+  |> List.map (fun s -> s |> to_chars |> combine_first_last_digit)
+  |> sum |> string_of_int
 
 let solve_part_2 lines =
   lines
   |> List.map (fun s ->
-         s |> to_chars |> convert_digit_words |> from_chars
-         |> combine_first_last_digit)
+         s |> to_chars |> convert_digit_words |> combine_first_last_digit)
   |> sum |> string_of_int
 
 (* tests *)
