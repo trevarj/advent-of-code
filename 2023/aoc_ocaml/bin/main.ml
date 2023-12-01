@@ -9,14 +9,16 @@ let next_day = Array.length data_list - 2
 
 let solution_template day =
   let template =
-    {|let solve_part_1 lines = ""
+    {|open Util
+
+let solve_part_1 lines = ""
 let solve_part_2 lines = ""
 
 (* tests *)
-let%test "day %day part 1 sample" = Util.test_sample %day 1 solve_part_1 "[todo]"
-let%test "day %day part 2 sample" = Util.test_sample %day 2 solve_part_2 "[todo]"
-let%test "day %day part 1" = Util.test_full %day solve_part_1 "[todo]"
-let%test "day %day part 2" = Util.test_full %day solve_part_2 "[todo]"
+let%test "day %day part 1 sample" = test_sample %day 1 solve_part_1 "[todo]"
+let%test "day %day part 2 sample" = test_sample %day 2 solve_part_2 "[todo]"
+let%test "day %day part 1" = test_full %day solve_part_1 "[todo]"
+let%test "day %day part 2" = test_full %day solve_part_2 "[todo]"
 |}
   in
   Str.(global_replace (regexp "%day") (string_of_int day) template)

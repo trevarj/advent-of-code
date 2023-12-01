@@ -26,3 +26,5 @@ let test_sample day part solution_fn want =
 let test_full day solution_fn want =
   let got = solution_fn (String.split_on_char '\n' @@ open_data day) in
   debug_result got want
+
+let ( >> ) f g x = g (f x)
