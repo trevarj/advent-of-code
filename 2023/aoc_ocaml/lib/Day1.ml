@@ -1,7 +1,5 @@
 open String
 
-exception DigitNotFound
-
 let is_digit = function '1' .. '9' -> true | _ -> false
 
 let rec convert_digit_words = function
@@ -22,18 +20,12 @@ let rec convert_digit_words = function
 
 let to_chars s = s |> to_seq |> List.of_seq
 let from_chars s = s |> List.to_seq |> of_seq
-
-let rec find_first_digit = function
-  | [] -> raise DigitNotFound
-  | c :: _ when is_digit c -> c
-  | _ :: rest -> find_first_digit rest
-
 let sum list = List.fold_left (fun acc c -> acc + c) 0 list
 
 let combine_first_last_digit s =
   let chars = to_chars s in
-  let first = make 1 (find_first_digit chars)
-  and last = make 1 (find_first_digit (List.rev chars)) in
+  let first = make 1 (List.find is_digit chars)
+  and last = make 1 (List.find is_digit (List.rev chars)) in
   int_of_string (first ^ last)
 
 let solve_part_1 lines =
