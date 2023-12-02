@@ -25,10 +25,11 @@ let%test "day %day part 2" = test_full %day solve_part_2 "[todo]"
 
 let make_files day =
   let open Out_channel in
-  with_open_text (Printf.sprintf "./lib/data/day%d" day) (fun _ -> ());
+  with_open_text (Printf.sprintf "./lib/data/day%d.txt" day) (fun _ -> ());
   for part = 1 to 2 do
-    with_open_text (Printf.sprintf "./lib/data/day%d_part%d_sample" day part)
-      (fun _ -> ())
+    with_open_text
+      (Printf.sprintf "./lib/data/day%d_part%d_sample.txt" day part) (fun _ ->
+        ())
   done;
   with_open_text (Printf.sprintf "./lib/Day%d.ml" day) (fun oc ->
       output_string oc (solution_template day))

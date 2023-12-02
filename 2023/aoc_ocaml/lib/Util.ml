@@ -3,11 +3,11 @@ let file_to_string path =
       String.trim @@ In_channel.input_all ic)
 
 let open_data_sample day part =
-  let file = Printf.sprintf "data/day%d_part%d_sample" day part in
+  let file = Printf.sprintf "data/day%d_part%d_sample.txt" day part in
   file_to_string file
 
 let open_data day =
-  let file = Printf.sprintf "data/day%d" day in
+  let file = Printf.sprintf "data/day%d.txt" day in
   file_to_string file
 
 let debug_result got want =
