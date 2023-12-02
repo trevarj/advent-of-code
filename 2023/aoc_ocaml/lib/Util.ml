@@ -28,3 +28,4 @@ let test_full day solution_fn want =
   debug_result got want
 
 let ( >> ) f g x = g (f x)
+let sum list = List.fold_left (fun acc c -> acc + c) 0 list

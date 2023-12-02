@@ -22,7 +22,6 @@ let rec convert_digit_words = function
 
 let to_chars s = s |> String.to_seq |> List.of_seq
 let from_chars s = s |> List.to_seq |> String.of_seq
-let sum list = List.fold_left (fun acc c -> acc + c) 0 list
 let combine_chars (a, b) = make 1 a ^ make 1 b
 
 let combine_first_last_digit chars =
