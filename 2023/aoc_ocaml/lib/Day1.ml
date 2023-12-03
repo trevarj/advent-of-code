@@ -2,8 +2,6 @@ open List
 open String
 open Util
 
-let is_digit = function '1' .. '9' -> true | _ -> false
-
 let rec convert_digit_words = function
   | 'o' :: 'n' :: ('e' :: _ as rest) -> '1' :: convert_digit_words rest
   | 't' :: 'w' :: ('o' :: _ as rest) -> '2' :: convert_digit_words rest
@@ -20,8 +18,6 @@ let rec convert_digit_words = function
   | c :: rest -> c :: convert_digit_words rest
   | [] -> []
 
-let to_chars s = s |> String.to_seq |> List.of_seq
-let from_chars s = s |> List.to_seq |> String.of_seq
 let combine_chars (a, b) = make 1 a ^ make 1 b
 
 let combine_first_last_digit chars =
@@ -30,12 +26,13 @@ let combine_first_last_digit chars =
 
 let solve_part_1 lines =
   lines
-  |> List.map (to_chars >> combine_first_last_digit)
+  |> List.map (string_to_chars >> combine_first_last_digit)
   |> sum |> string_of_int
 
 let solve_part_2 lines =
   lines
-  |> List.map (to_chars >> convert_digit_words >> combine_first_last_digit)
+  |> List.map
+       (string_to_chars >> convert_digit_words >> combine_first_last_digit)
   |> sum |> string_of_int
 
 (* tests *)
