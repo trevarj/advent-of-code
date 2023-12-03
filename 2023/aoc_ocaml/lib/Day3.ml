@@ -1,6 +1,7 @@
 open List
 open Util
 
+(* a map type to use a tuple as the key and 't as the value *)
 module IntPairs = struct
   type t = int * int
 
@@ -10,81 +11,51 @@ end
 
 module PairsMap = Map.Make (IntPairs)
 
+(* helper to convert a string list to a char array array *)
 let to_2d_array lines =
   rev lines
   |> fold_left (fun acc line -> string_to_chars line :: acc) []
   |> map Array.of_list |> Array.of_list
 
+(* safe get from a matrix *)
 let matrix_get x y matrix =
   let width = Array.length matrix.(0) and height = Array.length matrix in
   if x >= 0 && x < height && y >= 0 && y < width then Some matrix.(x).(y)
   else None
 
-let offsets =
-  [ (-1, -1); (0, -1); (1, -1); (1, 0); (1, 1); (0, 1); (-1, 1); (-1, 0) ]
+let is_symbol = function
+  | Some '.' | Some '0' .. '9' | None -> false
+  | _ -> true
 
-let check_adjacent x y arrays =
-  let is_valid = function '.' | '0' .. '9' -> false | _ -> true in
-  fold_left
-    (fun acc (x_off, y_off) ->
-      acc
-      || Option.map
-           (fun ch -> is_valid ch)
-           (matrix_get (x + x_off) (y + y_off) arrays)
-         |> Option.value ~default:false)
-    false offsets
+let is_gear = function Some '*' -> true | _ -> false
 
-let check_adjacent_gears x y arrays =
-  let is_gear = function Some '*' -> true | _ -> false in
-  let rec find_gear = function
-    | (x_off, y_off) :: _
-      when matrix_get (x + x_off) (y + y_off) arrays |> is_gear ->
+let check_adjacent x y arrays pred =
+  let rec find_symbol = function
+    | (x_off, y_off) :: _ when matrix_get (x + x_off) (y + y_off) arrays |> pred
+      ->
         Some (x + x_off, y + y_off)
-    | _ :: rest -> find_gear rest
+    | _ :: rest -> find_symbol rest
     | [] -> None
   in
-  find_gear offsets
+  find_symbol
+    [ (-1, -1); (0, -1); (1, -1); (1, 0); (1, 1); (0, 1); (-1, 1); (-1, 0) ]
 
-let calculate_valid_parts arrays =
-  let current_num = ref "" and current_validity = ref false and sum = ref 0 in
-  let resolve () =
-    (if !current_validity then
-       match int_of_string_opt !current_num with
-       | None -> ()
-       | Some n -> sum := !sum + n);
-    current_num := "";
-    current_validity := false
-  in
-  Array.iteri
-    (fun i row ->
-      Array.iteri
-        (fun j ch ->
-          match is_digit ch with
-          | true ->
-              current_num := !current_num ^ String.make 1 ch;
-              current_validity := !current_validity || check_adjacent i j arrays
-          | false -> resolve ())
-        row;
-      resolve ())
-    arrays;
-  !sum
-
-let calculate_gear_parts arrays =
+let calculate_parts validator arrays =
   let current_num = ref ""
-  and current_gear = ref None
-  and gear_map = ref PairsMap.empty in
+  and current_symbol = ref None
+  and symbol_map = ref PairsMap.empty in
   let resolve () =
-    (match (int_of_string_opt !current_num, !current_gear) with
+    (match (int_of_string_opt !current_num, !current_symbol) with
     | Some n, Some coord ->
         let parts =
-          match PairsMap.find_opt coord !gear_map with
+          match PairsMap.find_opt coord !symbol_map with
           | Some l -> n :: l
           | None -> n :: []
         in
-        gear_map := PairsMap.add coord parts !gear_map
+        symbol_map := PairsMap.add coord parts !symbol_map
     | _, _ -> ());
     current_num := "";
-    current_gear := None
+    current_symbol := None
   in
   Array.iteri
     (fun i row ->
@@ -93,24 +64,27 @@ let calculate_gear_parts arrays =
           match is_digit ch with
           | true ->
               current_num := !current_num ^ String.make 1 ch;
-              if Option.is_none !current_gear then
-                current_gear := check_adjacent_gears i j arrays
+              if !current_symbol |> Option.is_none then
+                current_symbol := check_adjacent i j arrays validator
           | false -> resolve ())
         row;
       resolve ())
     arrays;
-  !gear_map
+  !symbol_map
+
+let solve validator accumulator lines =
+  let map = lines |> to_2d_array |> calculate_parts validator in
+  PairsMap.fold accumulator map 0 |> string_of_int
 
 let solve_part_1 lines =
-  lines |> to_2d_array |> calculate_valid_parts |> string_of_int
+  solve is_symbol
+    (fun _ v acc -> if length v > 0 then acc + fold_left ( + ) 0 v else acc)
+    lines
 
 let solve_part_2 lines =
-  let map = lines |> to_2d_array |> calculate_gear_parts in
-  PairsMap.fold
-    (fun _ v acc ->
-      if length v = 2 then acc + fold_left (fun acc i -> i * acc) 1 v else acc)
-    map 0
-  |> string_of_int
+  solve is_gear
+    (fun _ v acc -> if length v = 2 then acc + fold_left ( * ) 1 v else acc)
+    lines
 
 (* tests *)
 let%test "day 3 part 1 sample" = test_sample 3 1 solve_part_1 "4361"
