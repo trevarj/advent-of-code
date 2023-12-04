@@ -40,16 +40,15 @@ let take n = List.filteri (fun i _ -> i < n)
 
 (* glguy's smart haskell solution *)
 let calculate_copies cards =
-  map calculate_matches cards
-  |> rev
-  |> fold_left (fun acc m -> (1 + sum (take m acc)) :: acc) []
-  |> sum
+  fold_right (fun m acc -> (1 + sum (take m acc)) :: acc) cards []
 
 let solve_part_1 lines =
   lines |> map (parse_line >> calculate_score) |> sum |> string_of_int
 
 let solve_part_2 lines =
-  lines |> map parse_line |> calculate_copies |> string_of_int
+  lines
+  |> map (parse_line >> calculate_matches)
+  |> calculate_copies |> sum |> string_of_int
 
 (* tests *)
 let%test "day 4 part 1 sample" = test_sample 4 1 solve_part_1 "13"
