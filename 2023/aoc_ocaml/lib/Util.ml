@@ -32,3 +32,15 @@ let sum list = List.fold_left (fun acc c -> acc + c) 0 list
 let string_to_chars s = s |> String.to_seq |> List.of_seq
 let string_from_chars s = s |> List.to_seq |> String.of_seq
 let is_digit = function '0' .. '9' -> true | _ -> false
+
+let print_int_list list =
+  let rec internal = function
+    | n :: ns ->
+        print_int n;
+        print_char ';';
+        internal ns
+    | [] -> ()
+  in
+  print_char '[';
+  internal list;
+  print_char ']'
