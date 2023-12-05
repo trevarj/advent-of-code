@@ -29,6 +29,11 @@ let test_full day solution_fn want =
 
 let ( >> ) f g x = g (f x)
 let sum list = List.fold_left (fun acc c -> acc + c) 0 list
+
+let min list =
+  let head = List.hd list and tail = List.tl list in
+  List.fold_left min head tail
+
 let string_to_chars s = s |> String.to_seq |> List.of_seq
 let string_from_chars s = s |> List.to_seq |> String.of_seq
 let is_digit = function '0' .. '9' -> true | _ -> false

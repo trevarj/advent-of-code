@@ -3,4 +3,4 @@
   (inline_tests (deps (source_tree data)))
   (preprocess (pps ppx_inline_test)))
 
-(env (dev (flags :standard -warn-error -27-32)))
+(env (dev (flags :standard -warn-error -26-27-32)))
