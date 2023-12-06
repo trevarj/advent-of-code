@@ -1,3 +1,6 @@
+let sp = String.split_on_char
+let get_lines = sp '\n'
+
 let file_to_string path =
   In_channel.with_open_text path (fun ic ->
       String.trim @@ In_channel.input_all ic)
