@@ -12,6 +12,18 @@ let parse lines =
   in
   List.combine (List.nth lines 0) (List.nth lines 1)
 
+let parse2 lines =
+  let lines =
+    lines
+    |> List.map (sp ':' >> List.tl)
+    |> List.flatten
+    |> List.map
+         (sp ' '
+         >> List.filter (( <> ) "")
+         >> List.fold_left ( ^ ) "" >> int_of_string)
+  in
+  (List.nth lines 0, List.nth lines 1)
+
 (*
 
 distance = (race_time - charge_time) * charge_time
@@ -52,16 +64,21 @@ let rec fold_range_right f acc (l, h) =
   | l, h when l <= h -> fold_range_right f (f l acc) (l + 1, h)
   | _ -> acc
 
-let solve_part_1 lines =
-  lines |> parse
+let solve_part_1' races =
+  races
   |> List.map (quad_solver >> fun (l, h) -> h - l - 1)
   |> List.fold_left Int.mul 1 |> string_of_int
 
-(* just delete the spaces between nums in the input lol *)
-let solve_part_2 lines = lines |> solve_part_1
+let solve_part_1 lines = lines |> parse |> solve_part_1'
+
+let solve_part_2 lines =
+  let races = lines |> parse2 in
+  solve_part_1' [ races ]
 
 (* tests *)
 let%test "day 6 part 1 sample" = test_sample 6 1 solve_part_1 "288"
 let%test "day 6 part 2 sample" = test_sample 6 2 solve_part_2 "71503"
 let%test "day 6 part 1" = test_full 6 solve_part_1 "449820"
+
+(* just delete the spaces between nums in the input lol *)
 let%test "day 6 part 2" = test_full 6 solve_part_2 "42250895"
