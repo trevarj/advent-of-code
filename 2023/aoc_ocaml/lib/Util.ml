@@ -34,6 +34,11 @@ let min list =
   let head = List.hd list and tail = List.tl list in
   List.fold_left min head tail
 
+let rec any pred = function
+  | x :: _ when pred x -> true
+  | _ :: xs -> any pred xs
+  | [] -> false
+
 let string_to_chars s = s |> String.to_seq |> List.of_seq
 let string_from_chars s = s |> List.to_seq |> String.of_seq
 let is_digit = function '0' .. '9' -> true | _ -> false

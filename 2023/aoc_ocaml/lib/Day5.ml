@@ -2,11 +2,17 @@ open String
 open Util
 module IntMap = Map.Make (Int)
 
+(*
+Rewrite and Part 2 solution inspired by https://github.com/byorgey/AoC/blob/master/2023/05/05.hs
+*)
+
 type jump_map = { dest : int; src : int; range : int }
 
 let into_jump_map = function
   | [ dest; src; range ] -> { dest; src; range }
   | _ -> assert false
+
+let invert_jump_map { dest; src; range } = { dest = src; src = dest; range }
 
 let parse_seeds line =
   line |> split_on_char ':' |> List.rev |> List.hd |> trim |> split_on_char ' '
@@ -31,68 +37,45 @@ let parse = function
   | seeds :: maps -> (parse_seeds seeds, parse_maps maps)
   | [] -> ([], [])
 
-let rec traverse_map num = function
-  | { dest; src; range } :: _ when num >= src && num < src + range ->
-      dest + num - src
-  | _ :: entries -> traverse_map num entries
-  | [] -> num
+let lookup_entry i { dest; src; range } =
+  if i >= src && i < src + range then Some (dest + i - src) else None
 
-let traverse_maps key maps =
-  List.fold_right (fun m acc -> traverse_map acc m) maps key
+let ( <+> ) x y =
+  match (x, y) with Some x, _ -> Some x | _, Some y -> Some y | _ -> None
+
+let rec asum lst = match lst with [] -> None | hd :: tl -> hd <+> asum tl
+
+let lookup_map (map : jump_map list) i =
+  Option.value (asum (List.map (lookup_entry i) map)) ~default:i
+
+let follow maps x =
+  let results = List.map lookup_map maps in
+  List.fold_right (fun r acc -> r acc) results x
 
 let rec pairings = function
-  | a :: b :: rest -> (a, a + b) :: pairings rest
+  | a :: b :: rest -> (a, a + b - 1) :: pairings rest
   | [] -> []
   | _ -> assert false
 
-let int_list n len =
-  let rec build n = function 0 -> [] | i -> n :: build (n + 1) (i - 1) in
-  build n len
+let in_range i (s, e) = s <= i && i <= e
 
 let solve_part_1 lines =
   let seeds, maps = parse lines in
-  List.map (fun seed -> traverse_maps seed maps) seeds |> min |> string_of_int
+  List.map (fun seed -> follow maps seed) seeds |> min |> string_of_int
 
-let solve_part_2 lines = ""
+let solve_part_2 lines =
+  let seeds, maps = parse lines in
+  let seed_ranges = pairings seeds in
+  let maps = List.map (List.map invert_jump_map) (List.rev maps) in
+  let rec find i =
+    let seed = follow maps i in
+    if any (in_range seed) seed_ranges then string_of_int i else find (i + 1)
+  in
+  find 1
 
 (* tests *)
 let%test "day 5 part 1 sample" = test_sample 5 1 solve_part_1 "35"
 let%test "day 5 part 2 sample" = test_sample 5 2 solve_part_2 "46"
 let%test "day 5 part 1" = test_full 5 solve_part_1 "227653707"
-(* let%test "day 5 part 2" = test_full 5 solve_part_2 "[todo]" *)
-
-let data =
-  split_on_char '\n'
-    {|seeds: 79 14 55 13
-
-seed-to-soil map:
-50 98 2
-52 50 48
-
-soil-to-fertilizer map:
-0 15 37
-37 52 2
-39 0 15
-
-fertilizer-to-water map:
-49 53 8
-0 11 42
-42 0 7
-57 7 4
-
-water-to-light map:
-88 18 7
-18 25 70
-
-light-to-temperature map:
-45 77 23
-81 45 19
-68 64 13
-
-temperature-to-humidity map:
-0 69 1
-1 0 69
-
-humidity-to-location map:
-60 56 37
-56 93 4|}
+(* too long *)
+(* let%test "day 5 part 2" = test_full 5 solve_part_2 "78775051" *)
