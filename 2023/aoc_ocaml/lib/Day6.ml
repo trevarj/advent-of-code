@@ -59,11 +59,6 @@ let quad_solver (t, d) =
   ( Int.of_float @@ Float.floor @@ f t d ( +. ),
     Int.of_float @@ Float.ceil @@ f t d ( -. ) )
 
-let rec fold_range_right f acc (l, h) =
-  match (l, h) with
-  | l, h when l <= h -> fold_range_right f (f l acc) (l + 1, h)
-  | _ -> acc
-
 let solve_part_1' races =
   races
   |> List.map (quad_solver >> fun (l, h) -> h - l - 1)
