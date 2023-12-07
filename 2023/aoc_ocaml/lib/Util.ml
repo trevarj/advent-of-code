@@ -21,13 +21,11 @@ let debug_result got want =
       false
 
 let test_sample day part solution_fn want =
-  let got =
-    solution_fn (String.split_on_char '\n' @@ open_data_sample day part)
-  in
+  let got = solution_fn (sp '\n' @@ open_data_sample day part) in
   debug_result got want
 
 let test_full day solution_fn want =
-  let got = solution_fn (String.split_on_char '\n' @@ open_data day) in
+  let got = solution_fn (sp '\n' @@ open_data day) in
   debug_result got want
 
 let ( >> ) f g x = g (f x)
@@ -57,3 +55,15 @@ let print_int_list list =
   print_char '[';
   internal list;
   print_char ']'
+
+let group pred list =
+  let rec group' acc = function
+    | [] -> acc
+    | x :: xs ->
+        let l, r = List.partition (pred x) xs in
+        group' ((x :: l) :: acc) r
+  in
+  group' [] list
+
+let fst (f, _) = f
+let snd (_, s) = s
