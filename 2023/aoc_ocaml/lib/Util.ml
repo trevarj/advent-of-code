@@ -67,3 +67,5 @@ let group pred list =
 
 let fst (f, _) = f
 let snd (_, s) = s
+let fst_l = function a :: _ -> a | _ -> raise Not_found
+let snd_l = function _ :: s :: _ -> s | _ -> raise Not_found
