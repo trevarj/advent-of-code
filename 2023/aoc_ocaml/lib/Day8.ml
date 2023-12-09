@@ -1,11 +1,4 @@
 open Util
-
-let data = get_lines {|LLR
-
-AAA = (BBB, BBB)
-BBB = (AAA, ZZZ)
-ZZZ = (ZZZ, ZZZ)|}
-
 module Lookup = Map.Make (String)
 
 let parse_value v =
