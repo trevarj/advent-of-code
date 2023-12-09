@@ -9,14 +9,11 @@ let rec diff_list seq =
       seq |> pairwise
       |> List.fold_left_map (fun _ (left, right) -> (right, right - left)) 0
     in
-    let next_last = diff_list diff in
-    last + next_last
+    last + diff_list diff
 
-let solve_part_1 lines =
-  lines |> parse |> List.map diff_list |> sum |> string_of_int
-
-let solve_part_2 lines =
-  lines |> parse |> List.map (List.rev >> diff_list) |> sum |> string_of_int
+let solve f lines = lines |> parse |> List.map f |> sum |> string_of_int
+let solve_part_1 = solve diff_list
+let solve_part_2 = solve (List.rev >> diff_list)
 
 (* tests *)
 let%test "day 9 part 1 sample" = test_sample 9 1 solve_part_1 "114"

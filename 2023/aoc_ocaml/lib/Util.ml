@@ -72,3 +72,5 @@ let snd_l = function _ :: s :: _ -> s | _ -> raise Not_found
 
 let pairwise list =
   List.of_seq @@ Seq.zip (List.to_seq list) (List.to_seq (List.tl list))
+
+let last list = List.hd @@ List.rev list
