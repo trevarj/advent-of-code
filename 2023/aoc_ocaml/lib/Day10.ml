@@ -36,31 +36,32 @@ let find_next_move prev (x, y) tiles =
       else None)
     [ north; south; east; west ]
 
-let walk tiles start =
-  let rec walk' prev_pos pos dist =
+let walk tiles =
+  let start = Option.get @@ find_start tiles in
+  let rec walk' prev_pos pos loop =
     match find_next_move prev_pos pos tiles with
-    | Some next_pos when next_pos = start -> dist + 1
-    | Some next_pos -> walk' pos next_pos (dist + 1)
+    | Some next_pos when next_pos = start -> next_pos :: loop
+    | Some next_pos -> walk' pos next_pos (next_pos :: loop)
     | None -> assert false
   in
-  walk' start start 0
+  walk' start start []
 
-let solve1 tiles =
-  let dist = tiles |> find_start |> Option.get |> walk tiles in
-  dist / 2 |> string_of_int
+let rec shoelace = function
+  | (x1, y1) :: (x2, y2) :: xs ->
+      ((y1 + y2) * (x2 - x1)) + shoelace ((x2, y2) :: xs)
+  | _ -> 0
 
-let solve_part_1 lines = lines |> parse |> solve1
-let solve_part_2 lines = ""
+let get_loop lines = lines |> parse |> walk
+
+let solve_part_1 lines =
+  lines |> get_loop |> List.length |> (Fun.flip Int.div) 2 |> string_of_int
+
+let solve_part_2 lines =
+  let loop = get_loop lines in
+  (abs (shoelace loop) - List.length loop + 3) / 2 |> string_of_int
 
 (* tests *)
-let data = get_lines {|..F7.
-.FJ|.
-SJ.L7
-|F--J
-LJ...|}
-
 let%test "day 10 part 1 sample" = test_sample 10 1 solve_part_1 "8"
-
-(* let%test "day 10 part 2 sample" = test_sample 10 1 solve_part_2 "[todo]" *)
+let%test "day 10 part 2 sample" = test_sample 10 2 solve_part_2 "10"
 let%test "day 10 part 1" = test_full 10 solve_part_1 "6828"
-(* let%test "day 10 part 2" = test_full 10 solve_part_2 "[todo]" *)
+let%test "day 10 part 2" = test_full 10 solve_part_2 "459"
