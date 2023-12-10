@@ -56,6 +56,12 @@ let get_loop lines = lines |> parse |> walk
 let solve_part_1 lines =
   lines |> get_loop |> List.length |> (Fun.flip Int.div) 2 |> string_of_int
 
+(*
+https://en.wikipedia.org/wiki/Shoelace_formula
+https://en.wikipedia.org/wiki/Pick%27s_theorem
+
+TODO: implement using : https://en.wikipedia.org/wiki/Flood_fill
+*)
 let solve_part_2 lines =
   let loop = get_loop lines in
   (abs (shoelace loop) - List.length loop + 3) / 2 |> string_of_int
