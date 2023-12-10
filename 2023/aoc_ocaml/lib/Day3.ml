@@ -11,18 +11,6 @@ end
 
 module PairsMap = Map.Make (IntPairs)
 
-(* helper to convert a string list to a char array array *)
-let to_2d_array lines =
-  rev lines
-  |> fold_left (fun acc line -> string_to_chars line :: acc) []
-  |> map Array.of_list |> Array.of_list
-
-(* safe get from a matrix *)
-let matrix_get x y matrix =
-  let width = Array.length matrix.(0) and height = Array.length matrix in
-  if x >= 0 && x < height && y >= 0 && y < width then Some matrix.(x).(y)
-  else None
-
 let is_symbol = function
   | Some '.' | Some '0' .. '9' | None -> false
   | _ -> true
@@ -65,7 +53,7 @@ let calculate_parts validator arrays =
           | true ->
               current_num := !current_num ^ String.make 1 ch;
               if !current_symbol |> Option.is_none then
-                current_symbol := check_adjacent i j arrays validator
+                current_symbol := check_adjacent j i arrays validator
           | false -> resolve ())
         row;
       resolve ())

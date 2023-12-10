@@ -67,10 +67,30 @@ let group pred list =
 
 let fst (f, _) = f
 let snd (_, s) = s
-let fst_l = function a :: _ -> a | _ -> raise Not_found
-let snd_l = function _ :: s :: _ -> s | _ -> raise Not_found
+
+let print_tuple (a, b) =
+  print_char '(';
+  print_int a;
+  print_char ',';
+  print_int b;
+  print_char ')'
+
+let list_first = function a :: _ -> a | _ -> raise Not_found
+let list_second = function _ :: s :: _ -> s | _ -> raise Not_found
 
 let pairwise list =
   List.of_seq @@ Seq.zip (List.to_seq list) (List.to_seq (List.tl list))
 
 let last list = List.hd @@ List.rev list
+
+(* safe get from a matrix *)
+let matrix_get x y matrix =
+  let width = Array.length matrix.(0) and height = Array.length matrix in
+  if y >= 0 && y < height && x >= 0 && x < width then Some matrix.(y).(x)
+  else None
+
+(* helper to convert a string list to a char array array *)
+let to_2d_array lines =
+  List.rev lines
+  |> List.fold_left (fun acc line -> string_to_chars line :: acc) []
+  |> List.map Array.of_list |> Array.of_list
