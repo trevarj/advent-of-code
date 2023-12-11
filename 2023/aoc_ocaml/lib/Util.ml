@@ -94,3 +94,11 @@ let to_2d_array lines =
   List.rev lines
   |> List.fold_left (fun acc line -> string_to_chars line :: acc) []
   |> List.map Array.of_list |> Array.of_list
+
+let to_2d_list lines =
+  List.rev lines
+  |> List.fold_left (fun acc line -> string_to_chars line :: acc) []
+
+let list_transpose matrix =
+  List.of_seq @@ Seq.map List.of_seq @@ Seq.transpose @@ List.to_seq
+  @@ List.map List.to_seq matrix
