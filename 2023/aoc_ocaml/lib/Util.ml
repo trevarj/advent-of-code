@@ -104,20 +104,22 @@ let list_transpose matrix =
   @@ List.map List.to_seq matrix
 
 let memo_rec f =
-  let h = Hashtbl.create 16 in
+  let cache = Hashtbl.create 256 in
   let rec g x =
-    try Hashtbl.find h x
-    with Not_found ->
-      let y = f g x in
-      Hashtbl.add h x y;
-      y
+    match Hashtbl.find_opt cache x with
+    | None ->
+        let y = f g x in
+        Hashtbl.add cache x y;
+        y
+    | Some v -> v
   in
   g
 
 let rec string_repeat n s =
-  match n with 0 -> s | n -> s ^ string_repeat (n - 1) s
+  match n with 0 -> "" | n -> s ^ string_repeat (n - 1) s
 
-let rec list_repeat n l = match n with 0 -> l | n -> l @ list_repeat (n - 1) l
+let rec list_repeat n l =
+  match n with 0 -> [] | n -> l @ list_repeat (n - 1) l
 
 let rec chars_intercalate ch = function
   | [] -> []
