@@ -41,7 +41,7 @@ let rec any pred = function
   | [] -> false
 
 let string_to_chars s = s |> String.to_seq |> List.of_seq
-let string_from_chars s = s |> List.to_seq |> String.of_seq
+let string_of_chars s = s |> List.to_seq |> String.of_seq
 let is_digit = function '0' .. '9' -> true | _ -> false
 
 let print_int_list list =
@@ -102,3 +102,14 @@ let to_2d_list lines =
 let list_transpose matrix =
   List.of_seq @@ Seq.map List.of_seq @@ Seq.transpose @@ List.to_seq
   @@ List.map List.to_seq matrix
+
+let memo_rec f =
+  let h = Hashtbl.create 16 in
+  let rec g x =
+    try Hashtbl.find h x
+    with Not_found ->
+      let y = f g x in
+      Hashtbl.add h x y;
+      y
+  in
+  g
