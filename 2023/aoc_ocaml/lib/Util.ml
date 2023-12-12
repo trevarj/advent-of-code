@@ -121,6 +121,9 @@ let rec string_repeat n s =
 let rec list_repeat n l =
   match n with 0 -> [] | n -> l @ list_repeat (n - 1) l
 
+let rec list_replicate n l =
+  match n with 0 -> [] | n -> l :: list_replicate (n - 1) l
+
 let rec chars_intercalate ch = function
   | [] -> []
   | [ c ] -> [ c ]
@@ -128,5 +131,5 @@ let rec chars_intercalate ch = function
 
 let rec list_intercalate sep = function
   | [] -> []
-  | [ l ] -> [ l ]
-  | l :: ls -> l :: sep :: list_intercalate sep ls
+  | [ l ] -> l
+  | l :: ls -> l @ (sep :: list_intercalate sep ls)

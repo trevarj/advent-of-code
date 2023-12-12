@@ -10,16 +10,22 @@ let is_valid grouping chars =
   in
   grouping = group 0 [] chars
 
-let arrangements grouping chars =
-  let arrange' memo chs acc =
-    match chs with
-    | '?' :: xs -> memo xs ('.' :: acc) + memo xs ('#' :: acc)
-    | (('.' | '#') as ch) :: xs -> memo xs (ch :: acc)
-    | [] when is_valid grouping acc -> 1
-    | [] -> 0
-    | _ -> assert false
+let arrangements grouping springs =
+  let arrange' memo springs grouping =
+    let dropper = function
+      | ('?' | '.') :: ss, gs -> memo ss gs
+      | [], [] -> 1
+      | _ -> 0
+    in
+    let rec keeper = function
+      | [], 0 :: bs -> memo [] bs
+      | ('?' | '.') :: ss, 0 :: bs -> memo ss bs
+      | ('?' | '#') :: ss, b :: bs -> keeper (ss, (b - 1) :: bs)
+      | _ -> 0
+    in
+    dropper (springs, grouping) + keeper (springs, grouping)
   in
-  memo_rec arrange' chars []
+  memo_rec arrange' springs grouping
 
 let solve lines =
   List.fold_right
@@ -36,7 +42,8 @@ let parse lines = lines |> List.map parse_line
 
 let unfold list =
   List.map
-    (fun (s, r) -> ((list_repeat 5 >> list_intercalate '?') s, list_repeat 5 r))
+    (fun (s, r) ->
+      ((list_replicate 5 >> list_intercalate '?') s, list_repeat 5 r))
     list
 
 let solve_part_1 lines = lines |> parse |> solve |> string_of_int
@@ -56,6 +63,6 @@ let data =
 let%test "day 12 part 1 sample" = test_sample 12 1 solve_part_1 "21"
 
 (* change 1->2 if sample data differs by part *)
-(* let%test "day 12 part 2 sample" = test_sample 12 1 solve_part_2 "525152" *)
+let%test "day 12 part 2 sample" = test_sample 12 1 solve_part_2 "525152"
 let%test "day 12 part 1" = test_full 12 solve_part_1 "7622"
-(* let%test "day 12 part 2" = test_full 12 solve_part_2 "[todo]" *)
+let%test "day 12 part 2" = test_full 12 solve_part_2 "[todo]"
