@@ -113,3 +113,18 @@ let memo_rec f =
       y
   in
   g
+
+let rec string_repeat n s =
+  match n with 0 -> s | n -> s ^ string_repeat (n - 1) s
+
+let rec list_repeat n l = match n with 0 -> l | n -> l @ list_repeat (n - 1) l
+
+let rec chars_intercalate ch = function
+  | [] -> []
+  | [ c ] -> [ c ]
+  | c :: cs -> c :: ch :: chars_intercalate ch cs
+
+let rec list_intercalate sep = function
+  | [] -> []
+  | [ l ] -> [ l ]
+  | l :: ls -> l :: sep :: list_intercalate sep ls
