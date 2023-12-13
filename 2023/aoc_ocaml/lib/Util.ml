@@ -103,18 +103,6 @@ let list_transpose matrix =
   List.of_seq @@ Seq.map List.of_seq @@ Seq.transpose @@ List.to_seq
   @@ List.map List.to_seq matrix
 
-let memo_rec f =
-  let cache = Hashtbl.create 256 in
-  let rec g x =
-    match Hashtbl.find_opt cache x with
-    | None ->
-        let y = f g x in
-        Hashtbl.add cache x y;
-        y
-    | Some v -> v
-  in
-  g
-
 let rec string_repeat n s =
   match n with 0 -> "" | n -> s ^ string_repeat (n - 1) s
 
