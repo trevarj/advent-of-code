@@ -9,3 +9,8 @@ from there.
 ## 2023: OCaml 🐪
 I didn't want to spend so much time with a new language, so I just decided on
 one I've already dabbled with.
+
+Thank you to the following people for help and inspiration:
+  [glguy](https://github.com/glguy/advent)
+  [mbottini](https://github.com/mbottini/AOC2023)
+  [byorgey](https://github.com/byorgey/AoC)
