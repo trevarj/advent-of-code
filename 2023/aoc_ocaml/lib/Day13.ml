@@ -30,26 +30,6 @@ let solve_part_1 = solve 0
 let solve_part_2 = solve 1
 
 (* tests *)
-
-let data =
-  parse
-  @@ get_lines
-       {|#.##..##.
-..#.##.#.
-##......#
-##......#
-..#.##.#.
-..##..##.
-#.#.##.#.
-
-#...##..#
-#....#..#
-..##..###
-#####.##.
-#####.##.
-..##..###
-#....#..#|}
-
 let%test "day 13 part 1 sample" = test_sample 13 1 solve_part_1 "405"
 
 (* change 1->2 if sample data differs by part *)

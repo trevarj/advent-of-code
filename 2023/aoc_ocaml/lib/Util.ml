@@ -110,6 +110,15 @@ let list_split sep list =
   in
   split' [] [] (List.rev list)
 
+(* keep separators *)
+let list_splitk sep list =
+  let rec split' acc accs = function
+    | [] -> acc :: accs
+    | x :: xs when x = sep -> split' [] ([ x ] :: acc :: accs) xs
+    | x :: xs -> split' (x :: acc) accs xs
+  in
+  split' [] [] (List.rev list)
+
 let list_split_at i list =
   let rev = List.rev in
   let rec s' i acc = function
