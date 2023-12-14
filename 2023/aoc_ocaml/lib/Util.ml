@@ -44,10 +44,10 @@ let string_to_chars s = s |> String.to_seq |> List.of_seq
 let string_of_chars s = s |> List.to_seq |> String.of_seq
 let is_digit = function '0' .. '9' -> true | _ -> false
 
-let print_int_list list =
+let print_list f list =
   let rec internal = function
     | n :: ns ->
-        print_int n;
+        f n;
         print_char ';';
         internal ns
     | [] -> ()
@@ -55,6 +55,9 @@ let print_int_list list =
   print_char '[';
   internal list;
   print_char ']'
+
+let print_int_list = print_list print_int
+let print_char_list = print_list print_char
 
 let group pred list =
   let rec group' acc = function
@@ -98,6 +101,35 @@ let to_2d_array lines =
 let to_2d_list lines =
   List.rev lines
   |> List.fold_left (fun acc line -> string_to_chars line :: acc) []
+
+let list_split sep list =
+  let rec split' acc accs = function
+    | [] -> acc :: accs
+    | x :: xs when x = sep -> split' [] (acc :: accs) xs
+    | x :: xs -> split' (x :: acc) accs xs
+  in
+  split' [] [] (List.rev list)
+
+let list_split_at i list =
+  let rev = List.rev in
+  let rec s' i acc = function
+    | [] -> (rev acc, [])
+    | xs when i = 0 -> (rev acc, xs)
+    | x :: xs -> s' (i - 1) (x :: acc) xs
+  in
+  s' i [] list
+
+let list_truncate size list =
+  let rev = List.rev and len = List.length in
+  let rec t' = function
+    | _ :: xs as l when len l > size -> t' xs
+    | x :: xs -> x :: t' xs
+    | [] -> []
+  in
+  rev @@ t' (rev list)
+
+let rec list_zip l r =
+  match (l, r) with l :: ls, r :: rs -> (l, r) :: list_zip ls rs | _ -> []
 
 let list_transpose matrix =
   List.of_seq @@ Seq.map List.of_seq @@ Seq.transpose @@ List.to_seq
