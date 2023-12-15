@@ -98,6 +98,17 @@ module List = struct
 
   let rec repeat n l = match n with 0 -> [] | n -> l @ repeat (n - 1) l
   let replicate n l = List.init n (fun _ -> l)
+  let fold_leftl f l = List.fold_left f (hd l) (tl l)
+
+  let rec assoc_upsert (key, value) = function
+    | [] -> (key, value) :: []
+    | (k, _) :: xs when k = key -> (key, value) :: xs
+    | x :: xs -> x :: assoc_upsert (key, value) xs
+
+  let rec assoc_remove key = function
+    | [] -> []
+    | (k, _) :: xs when k = key -> xs
+    | x :: xs -> x :: assoc_remove key xs
 end
 
 module Array = struct
