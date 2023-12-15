@@ -14,7 +14,7 @@ let valid_nexts dir = function
 
 let parse lines =
   lines
-  |> List.map (fun s -> string_to_chars s |> Array.of_list)
+  |> List.map (fun s -> String.to_chars s |> Array.of_list)
   |> Array.of_list
 
 let find_start =
@@ -24,9 +24,9 @@ let find_start =
 let find_next_move prev (x, y) tiles =
   List.find_map
     (fun (x_off, y_off) ->
-      let current_tile = Option.get (matrix_get x y tiles) in
+      let current_tile = Option.get (Array.get_opt x y tiles) in
       let next_tile =
-        Option.value ~default:'.' (matrix_get (x + x_off) (y + y_off) tiles)
+        Option.value ~default:'.' (Array.get_opt (x + x_off) (y + y_off) tiles)
       in
       let next_pos = (x + x_off, y + y_off) in
       if

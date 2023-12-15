@@ -1,6 +1,6 @@
 open Util
 
-let parse lines = lines |> to_2d_list
+let parse lines = lines |> List.to_2d_list
 
 let expand matrix =
   let rec expand' = function
@@ -9,7 +9,7 @@ let expand matrix =
         (Array.to_list @@ Array.make (List.length x) '*') :: expand' xs
     | x :: xs -> x :: expand' xs
   in
-  expand' (list_transpose (expand' @@ list_transpose matrix))
+  expand' (List.transpose (expand' @@ List.transpose matrix))
 
 let locate_galaxies multiplier matrix =
   let galaxies = ref [] and y_multiplier = ref 0 in

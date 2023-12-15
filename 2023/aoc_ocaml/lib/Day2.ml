@@ -58,7 +58,7 @@ let solve_part_1 lines =
   lines
   |> mapi (fun i line ->
          match parse_game_part_1 line with true -> i + 1 | false -> 0)
-  |> sum |> string_of_int
+  |> List.sum |> string_of_int
 
 let solve_part_2 lines =
   lines |> map parse_game_part_2

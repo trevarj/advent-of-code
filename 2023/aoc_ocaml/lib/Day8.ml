@@ -3,19 +3,19 @@ module Lookup = Map.Make (String)
 
 let parse_value v =
   let l_r = String.sub v 1 8 |> sp ',' in
-  (list_first l_r, String.trim @@ list_second l_r)
+  (List.fst l_r, String.trim @@ List.snd l_r)
 
 let parse_map map line =
   let key_val = sp '=' line in
-  let key = String.trim @@ list_first key_val
-  and v = parse_value @@ String.trim @@ list_second key_val in
+  let key = String.trim @@ List.fst key_val
+  and v = parse_value @@ String.trim @@ List.snd key_val in
   map := Lookup.add key v !map
 
 let parse lines =
   let map = ref Lookup.empty in
   let hd = List.hd lines in
   List.iter (fun l -> parse_map map l) ((List.tl >> List.tl) lines);
-  (Seq.cycle @@ List.to_seq @@ string_to_chars hd, map)
+  (Seq.cycle @@ List.to_seq @@ String.to_chars hd, map)
 
 let lookup k map = Lookup.find k map
 

@@ -3,15 +3,15 @@ open Util
 let parse = List.map (sp ' ' >> List.map int_of_string)
 
 let rec diff_list seq =
-  if not (any (( <> ) 0) seq) then 0
+  if not (List.any (( <> ) 0) seq) then 0
   else
     let last, diff =
-      seq |> pairwise
+      seq |> List.pairwise
       |> List.fold_left_map (fun _ (left, right) -> (right, right - left)) 0
     in
     last + diff_list diff
 
-let solve f lines = lines |> parse |> List.map f |> sum |> string_of_int
+let solve f lines = lines |> parse |> List.map f |> List.sum |> string_of_int
 let solve_part_1 = solve diff_list
 let solve_part_2 = solve (List.rev >> diff_list)
 

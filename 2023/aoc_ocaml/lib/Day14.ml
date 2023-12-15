@@ -16,19 +16,19 @@ let thing_compare d a b =
 
 let weigh_row row =
   let len = List.length row in
-  List.mapi (fun i x -> if x = R then len - i else 0) row |> sum
+  List.mapi (fun i x -> if x = R then len - i else 0) row |> List.sum
 
 let shift_row dir row =
-  row |> list_splitk H
+  row |> List.splitk H
   |> List.map (List.sort @@ thing_compare dir)
   |> List.flatten
 
 let shift dir = List.map (shift_row dir)
-let cycle_step dir cycle = cycle |> list_transpose |> shift dir
+let cycle_step dir cycle = cycle |> List.transpose |> shift dir
 
 let cycle m =
   m |> shift 1 |> cycle_step 1 |> cycle_step (-1) |> cycle_step (-1)
-  |> list_transpose
+  |> List.transpose
 
 let do_cycles n m =
   let cache = Hashtbl.create 256 in
@@ -49,13 +49,16 @@ let do_cycles n m =
        (Hashtbl.to_seq cache)
 
 let parse lines =
-  lines |> to_2d_list |> list_transpose |> List.map (List.map char_to_thing)
+  lines |> List.to_2d_list |> List.transpose
+  |> List.map (List.map char_to_thing)
 
 let solve_part_1 lines =
-  parse lines |> List.map (shift_row 1 >> weigh_row) |> sum |> string_of_int
+  parse lines
+  |> List.map (shift_row 1 >> weigh_row)
+  |> List.sum |> string_of_int
 
 let solve_part_2 lines =
-  parse lines |> do_cycles 1000000000 |> List.map weigh_row |> sum
+  parse lines |> do_cycles 1000000000 |> List.map weigh_row |> List.sum
   |> string_of_int
 
 (* tests *)

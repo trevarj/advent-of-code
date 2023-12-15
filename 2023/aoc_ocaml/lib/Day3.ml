@@ -19,8 +19,8 @@ let is_gear = function Some '*' -> true | _ -> false
 
 let check_adjacent x y arrays pred =
   let rec find_symbol = function
-    | (x_off, y_off) :: _ when matrix_get (x + x_off) (y + y_off) arrays |> pred
-      ->
+    | (x_off, y_off) :: _
+      when Array.get_opt (x + x_off) (y + y_off) arrays |> pred ->
         Some (x + x_off, y + y_off)
     | _ :: rest -> find_symbol rest
     | [] -> None
@@ -61,7 +61,7 @@ let calculate_parts validator arrays =
   !symbol_map
 
 let solve validator accumulator lines =
-  let map = lines |> to_2d_array |> calculate_parts validator in
+  let map = lines |> String.to_2d_array |> calculate_parts validator in
   PairsMap.fold accumulator map 0 |> string_of_int
 
 let solve_part_1 lines =

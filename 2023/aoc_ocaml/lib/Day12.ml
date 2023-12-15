@@ -40,8 +40,8 @@ let solve lines =
 
 let parse_line line =
   let line = sp ' ' line in
-  let left = string_to_chars @@ list_first line
-  and right = List.filter_map int_of_string_opt (sp ',' @@ list_second line) in
+  let left = String.to_chars @@ List.fst line
+  and right = List.filter_map int_of_string_opt (sp ',' @@ List.snd line) in
   (left, right)
 
 let parse lines = lines |> List.map parse_line
@@ -49,7 +49,7 @@ let parse lines = lines |> List.map parse_line
 let unfold list =
   List.map
     (fun (s, r) ->
-      ((list_replicate 5 >> list_intercalate '?') s, list_repeat 5 r))
+      ((List.replicate 5 >> List.intercalate '?') s, List.repeat 5 r))
     list
 
 let solve_part_1 lines = lines |> parse |> solve |> string_of_int

@@ -26,14 +26,14 @@ let combine_first_last_digit chars =
 
 let solve_part_1 lines =
   lines
-  |> List.map (string_to_chars >> combine_first_last_digit)
-  |> sum |> string_of_int
+  |> List.map (String.to_chars >> combine_first_last_digit)
+  |> List.sum |> string_of_int
 
 let solve_part_2 lines =
   lines
   |> List.map
-       (string_to_chars >> convert_digit_words >> combine_first_last_digit)
-  |> sum |> string_of_int
+       (String.to_chars >> convert_digit_words >> combine_first_last_digit)
+  |> List.sum |> string_of_int
 
 (* tests *)
 let%test "day 1 part 1 sample" = Util.test_sample 1 1 solve_part_1 "142"

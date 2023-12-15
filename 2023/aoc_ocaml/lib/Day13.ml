@@ -2,19 +2,19 @@ open Util
 
 let find_reflection d pattern =
   let diff (x, y) =
-    list_zip x y |> List.filter (fun (x, y) -> x <> y) |> List.length
+    List.zip x y |> List.filter (fun (x, y) -> x <> y) |> List.length
   in
   let rec reflection' = function
     | [], _ -> None
     | l :: ls, [] -> reflection' (ls, [ l ])
     | (l :: ls as left), right ->
-        if list_zip left right |> List.map diff |> sum = d then
+        if List.zip left right |> List.map diff |> List.sum = d then
           Some (List.length right)
         else reflection' (ls, l :: right)
   in
   match reflection' (pattern, []) with Some i -> i | None -> 0
 
-let parse lines = lines |> to_2d_list |> list_split []
+let parse lines = lines |> List.to_2d_list |> List.split []
 
 let solve d lines =
   let patterns = parse lines in
@@ -23,7 +23,7 @@ let solve d lines =
        (fun acc pattern ->
          acc
          + (find_reflection d pattern * 100)
-         + (find_reflection d @@ list_transpose @@ pattern))
+         + (find_reflection d @@ List.transpose @@ pattern))
        0 patterns
 
 let solve_part_1 = solve 0

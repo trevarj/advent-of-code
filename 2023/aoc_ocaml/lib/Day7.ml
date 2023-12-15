@@ -53,7 +53,7 @@ let grouped_hand hand =
       | _ when hx = Joker -> 1
       | 0 -> card_compare hy hx
       | c -> c)
-    (group card_eq hand)
+    (List.group card_eq hand)
 
 let determine_hand has_jokers hand =
   let grouped = grouped_hand hand in
@@ -88,7 +88,7 @@ let hand_dual h1 h2 =
 let parse_hand has_jokers line =
   let hand_bid = sp ' ' line in
   let hand =
-    List.map (card_of_char has_jokers) (string_to_chars (List.hd hand_bid))
+    List.map (card_of_char has_jokers) (String.to_chars (List.hd hand_bid))
   and bid = (List.tl >> List.hd) hand_bid in
   (hand, int_of_string bid)
 
