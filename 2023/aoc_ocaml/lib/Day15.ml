@@ -27,23 +27,18 @@ let do_op box = function
       box.(key) <- List.assoc_remove label inner;
       box
 
-let calculate_box_power index box =
-  snd
-  @@ List.fold_left
-       (fun (slot, acc) (_, focal_len) ->
-         (slot + 1, acc + (index * slot * focal_len)))
-       (1, 0) box
+let formuoli box_idx slot acc (_, focal_len) =
+  acc + ((box_idx + 1) * (slot + 1) * focal_len)
+
+let calculate_box_power index sum box =
+  sum + List.fold_lefti (formuoli index) 0 box
 
 let solve1 strs = strs |> List.map hash |> List.sum
 
 let solve2 strs =
-  let box = Array.make 256 [] in
-  let ops = List.map parse_op strs in
+  let box = Array.make 256 [] and ops = List.map parse_op strs in
   let complete = List.fold_left do_op box ops in
-  List.fold_left
-    (fun (boxi, acc) box -> (boxi + 1, acc + calculate_box_power boxi box))
-    (1, 0) (Array.to_list complete)
-  |> snd
+  List.fold_lefti calculate_box_power 0 (Array.to_list complete)
 
 let parse s = s |> List.fst |> sp ','
 let solve_part_1 lines = lines |> parse |> solve1

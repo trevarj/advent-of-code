@@ -100,6 +100,12 @@ module List = struct
   let replicate n l = List.init n (fun _ -> l)
   let fold_leftl f l = List.fold_left f (hd l) (tl l)
 
+  let fold_lefti f acc l =
+    let _, res =
+      List.fold_left (fun (i, acc) a -> (i + 1, f i acc a)) (0, acc) l
+    in
+    res
+
   let rec assoc_upsert (key, value) = function
     | [] -> (key, value) :: []
     | (k, _) :: xs when k = key -> (key, value) :: xs
