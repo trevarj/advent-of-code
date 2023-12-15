@@ -1,0 +1,5 @@
+(library
+  (name day11)
+  (libraries Util)
+  (inline_tests (deps (source_tree ../data)))
+  (preprocess (pps ppx_inline_test)))

@@ -131,11 +131,11 @@ let sp = String.split_on_char
 let get_lines = sp '\n'
 
 let open_data_sample day part =
-  let file = Printf.sprintf "data/day%d_part%d_sample.txt" day part in
+  let file = Printf.sprintf "../data/day%d_part%d_sample.txt" day part in
   String.of_file file
 
 let open_data day =
-  let file = Printf.sprintf "data/day%d.txt" day in
+  let file = Printf.sprintf "../data/day%d.txt" day in
   String.of_file file
 
 let debug_result got want =
