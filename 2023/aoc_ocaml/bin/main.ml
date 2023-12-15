@@ -17,8 +17,8 @@ let solution_template day =
   let template =
     {|open Util
 
-let solve_part_1 lines = ""
-let solve_part_2 lines = ""
+let solve_part_1 lines = -1
+let solve_part_2 lines = -1
 
 (* tests *)
 (* change 1->2 if sample data differs by part *)
