@@ -59,7 +59,7 @@ let quad_solver (t, d) =
 let solve_part_1' races =
   races
   |> List.map (quad_solver >> fun (l, h) -> h - l - 1)
-  |> List.fold_left Int.mul 1 |> string_of_int
+  |> List.fold_left Int.mul 1
 
 let solve_part_1 lines = lines |> parse |> solve_part_1'
 
@@ -68,9 +68,9 @@ let solve_part_2 lines =
   solve_part_1' [ races ]
 
 (* tests *)
-let%test "day 6 part 1 sample" = test_sample 6 1 solve_part_1 "288"
-let%test "day 6 part 2 sample" = test_sample 6 2 solve_part_2 "71503"
-let%test "day 6 part 1" = test_full 6 solve_part_1 "449820"
+let%test "day 6 part 1 sample" = test_sample 6 1 solve_part_1 288
+let%test "day 6 part 2 sample" = test_sample 6 2 solve_part_2 71503
+let%test "day 6 part 1" = test_full 6 solve_part_1 449820
 
 (* just delete the spaces between nums in the input lol *)
-let%test "day 6 part 2" = test_full 6 solve_part_2 "42250895"
+let%test "day 6 part 2" = test_full 6 solve_part_2 42250895

@@ -58,17 +58,16 @@ let solve_part_1 lines =
   lines
   |> mapi (fun i line ->
          match parse_game_part_1 line with true -> i + 1 | false -> 0)
-  |> List.sum |> string_of_int
+  |> List.sum
 
 let solve_part_2 lines =
   lines |> map parse_game_part_2
   |> fold_left
        (fun acc min_set -> acc + (min_set.red * min_set.green * min_set.blue))
        0
-  |> string_of_int
 
 (* tests *)
-let%test "day 2 part 1 sample" = test_sample 2 1 solve_part_1 "8"
-let%test "day 2 part 2 sample" = test_sample 2 2 solve_part_2 "2286"
-let%test "day 2 part 1" = test_full 2 solve_part_1 "2913"
-let%test "day 2 part 2" = test_full 2 solve_part_2 "55593"
+let%test "day 2 part 1 sample" = test_sample 2 1 solve_part_1 8
+let%test "day 2 part 2 sample" = test_sample 2 2 solve_part_2 2286
+let%test "day 2 part 1" = test_full 2 solve_part_1 2913
+let%test "day 2 part 2" = test_full 2 solve_part_2 55593

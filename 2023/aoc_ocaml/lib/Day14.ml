@@ -53,18 +53,14 @@ let parse lines =
   |> List.map (List.map char_to_thing)
 
 let solve_part_1 lines =
-  parse lines
-  |> List.map (shift_row 1 >> weigh_row)
-  |> List.sum |> string_of_int
+  parse lines |> List.map (shift_row 1 >> weigh_row) |> List.sum
 
 let solve_part_2 lines =
   parse lines |> do_cycles 1000000000 |> List.map weigh_row |> List.sum
-  |> string_of_int
 
 (* tests *)
-let%test "day 14 part 1 sample" = test_sample 14 1 solve_part_1 "136"
-
 (* change 1->2 if sample data differs by part *)
-let%test "day 14 part 2 sample" = test_sample 14 1 solve_part_2 "64"
-let%test "day 14 part 1" = test_full 14 solve_part_1 "102497"
-let%test "day 14 part 2" = test_full 14 solve_part_2 "105008"
+let%test "day 14 part 1 sample" = test_sample 14 1 solve_part_1 136
+let%test "day 14 part 2 sample" = test_sample 14 1 solve_part_2 64
+let%test "day 14 part 1" = test_full 14 solve_part_1 102497
+let%test "day 14 part 2" = test_full 14 solve_part_2 105008

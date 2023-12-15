@@ -42,15 +42,13 @@ let distance_sum pairs =
 
 let solve m lines =
   lines |> parse |> expand |> locate_galaxies m |> permutations |> distance_sum
-  |> string_of_int
 
 let solve_part_1 = solve 2
 let solve_part_2 = solve 100000
 
 (* tests *)
-let%test "day 11 part 1 sample" = test_sample 11 1 solve_part_1 "374"
-
 (* change 1->2 if sample data differs by part *)
-let%test "day 11 part 2 sample" = test_sample 11 1 solve_part_2 "8200210"
-let%test "day 11 part 1" = test_full 11 solve_part_1 "10276166"
-let%test "day 11 part 2" = test_full 11 solve_part_2 "59877478798"
+let%test "day 11 part 1 sample" = test_sample 11 1 solve_part_1 374
+let%test "day 11 part 2 sample" = test_sample 11 1 solve_part_2 8200210
+let%test "day 11 part 1" = test_full 11 solve_part_1 10276166
+let%test "day 11 part 2" = test_full 11 solve_part_2 59877478798

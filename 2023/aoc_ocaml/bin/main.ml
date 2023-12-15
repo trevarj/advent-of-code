@@ -22,10 +22,10 @@ let solve_part_2 lines = ""
 
 (* tests *)
 (* change 1->2 if sample data differs by part *)
-let%test "day %day part 1 sample" = test_sample %day 1 solve_part_1 "[todo]"
-let%test "day %day part 2 sample" = test_sample %day 1 solve_part_2 "[todo]"
-let%test "day %day part 1" = test_full %day solve_part_1 "[todo]"
-let%test "day %day part 2" = test_full %day solve_part_2 "[todo]"
+let%test "day %day part 1 sample" = test_sample %day 1 solve_part_1 0
+let%test "day %day part 2 sample" = test_sample %day 1 solve_part_2 0
+let%test "day %day part 1" = test_full %day solve_part_1 0
+let%test "day %day part 2" = test_full %day solve_part_2 0
 |}
   in
   Str.(global_replace (regexp "%day") (string_of_int day) template)

@@ -133,11 +133,10 @@ let open_data day =
   String.of_file file
 
 let debug_result got want =
-  match got = want with
-  | true -> true
-  | false ->
-      print_string @@ "got: " ^ got ^ "\nexpected: " ^ want ^ "\n";
-      false
+  if got <> want then (
+    Printf.printf "got: %d \nexpected: %d \n" got want;
+    false)
+  else true
 
 let test_sample day part solution_fn want =
   let got = solution_fn (sp '\n' @@ open_data_sample day part) in

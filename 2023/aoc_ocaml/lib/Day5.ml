@@ -27,7 +27,7 @@ let parse_maps lines =
          | xs, [ "" ] -> xs
          | xs, [ header ] when ends_with ~suffix:":" header -> [] :: xs
          | x :: xs, [ num ] ->
-             ((split_on_char ' ' num |> List.map int_of_string|> into_jump_map)
+             ((split_on_char ' ' num |> List.map int_of_string |> into_jump_map)
              :: x)
              :: xs
          | _ -> assert false)
@@ -61,7 +61,7 @@ let in_range i (s, e) = s <= i && i <= e
 
 let solve_part_1 lines =
   let seeds, maps = parse lines in
-  List.map (fun seed -> follow maps seed) seeds |> List.min |> string_of_int
+  List.map (fun seed -> follow maps seed) seeds |> List.min
 
 let solve_part_2 lines =
   let seeds, maps = parse lines in
@@ -69,14 +69,12 @@ let solve_part_2 lines =
   let maps = List.map (List.map invert_jump_map) (List.rev maps) in
   let rec find i =
     let seed = follow maps i in
-    if List.any (in_range seed) seed_ranges then string_of_int i
-    else find (i + 1)
+    if List.any (in_range seed) seed_ranges then i else find (i + 1)
   in
   find 1
 
 (* tests *)
-let%test "day 5 part 1 sample" = test_sample 5 1 solve_part_1 "35"
-let%test "day 5 part 2 sample" = test_sample 5 2 solve_part_2 "46"
-let%test "day 5 part 1" = test_full 5 solve_part_1 "227653707"
-(* too long *)
-(* let%test "day 5 part 2" = test_full 5 solve_part_2 "78775051" *)
+let%test "day 5 part 1 sample" = test_sample 5 1 solve_part_1 35
+let%test "day 5 part 2 sample" = test_sample 5 2 solve_part_2 46
+let%test "day 5 part 1" = test_full 5 solve_part_1 227653707
+(* let%test "day 5 part 2" = test_full 5 solve_part_2 78775051 *)

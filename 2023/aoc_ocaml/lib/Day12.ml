@@ -52,13 +52,12 @@ let unfold list =
       ((List.replicate 5 >> List.intercalate '?') s, List.repeat 5 r))
     list
 
-let solve_part_1 lines = lines |> parse |> solve |> string_of_int
-let solve_part_2 lines = lines |> parse |> unfold |> solve |> string_of_int
+let solve_part_1 lines = lines |> parse |> solve
+let solve_part_2 lines = lines |> parse |> unfold |> solve
 
 (* tests *)
-let%test "day 12 part 1 sample" = test_sample 12 1 solve_part_1 "21"
-
 (* change 1->2 if sample data differs by part *)
-let%test "day 12 part 2 sample" = test_sample 12 1 solve_part_2 "525152"
-let%test "day 12 part 1" = test_full 12 solve_part_1 "7622"
-let%test "day 12 part 2" = test_full 12 solve_part_2 "4964259839627"
+let%test "day 12 part 1 sample" = test_sample 12 1 solve_part_1 21
+let%test "day 12 part 2 sample" = test_sample 12 1 solve_part_2 525152
+let%test "day 12 part 1" = test_full 12 solve_part_1 7622
+let%test "day 12 part 2" = test_full 12 solve_part_2 4964259839627

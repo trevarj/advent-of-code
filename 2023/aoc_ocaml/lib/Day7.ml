@@ -97,7 +97,7 @@ let parse has_jokers = List.map (parse_hand has_jokers)
 let solve' hands =
   hands |> List.sort hand_dual
   |> List.fold_left (fun (i, sum) (_, _, b) -> (i + 1, (i * b) + sum)) (1, 0)
-  |> snd |> string_of_int
+  |> snd
 
 let solve_part_1 lines =
   lines |> parse false |> hands_assign_type false |> solve'
@@ -105,7 +105,7 @@ let solve_part_1 lines =
 let solve_part_2 lines = lines |> parse true |> hands_assign_type true |> solve'
 
 (* tests *)
-let%test "day 7 part 1 sample" = test_sample 7 1 solve_part_1 "6440"
-let%test "day 7 part 2 sample" = test_sample 7 2 solve_part_2 "5905"
-let%test "day 7 part 1" = test_full 7 solve_part_1 "246912307"
-let%test "day 7 part 2" = test_full 7 solve_part_2 "246894760"
+let%test "day 7 part 1 sample" = test_sample 7 1 solve_part_1 6440
+let%test "day 7 part 2 sample" = test_sample 7 2 solve_part_2 5905
+let%test "day 7 part 1" = test_full 7 solve_part_1 246912307
+let%test "day 7 part 2" = test_full 7 solve_part_2 246894760

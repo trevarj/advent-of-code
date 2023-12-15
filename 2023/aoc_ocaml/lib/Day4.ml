@@ -43,15 +43,13 @@ let calculate_copies cards =
   fold_right (fun m acc -> (1 + List.sum (take m acc)) :: acc) cards []
 
 let solve_part_1 lines =
-  lines |> map (parse_line >> calculate_score) |> List.sum |> string_of_int
+  lines |> map (parse_line >> calculate_score) |> List.sum
 
 let solve_part_2 lines =
-  lines
-  |> map (parse_line >> calculate_matches)
-  |> calculate_copies |> List.sum |> string_of_int
+  lines |> map (parse_line >> calculate_matches) |> calculate_copies |> List.sum
 
 (* tests *)
-let%test "day 4 part 1 sample" = test_sample 4 1 solve_part_1 "13"
-let%test "day 4 part 2 sample" = test_sample 4 2 solve_part_2 "30"
-let%test "day 4 part 1" = test_full 4 solve_part_1 "26426"
-let%test "day 4 part 2" = test_full 4 solve_part_2 "6227972"
+let%test "day 4 part 1 sample" = test_sample 4 1 solve_part_1 13
+let%test "day 4 part 2 sample" = test_sample 4 2 solve_part_2 30
+let%test "day 4 part 1" = test_full 4 solve_part_1 26426
+let%test "day 4 part 2" = test_full 4 solve_part_2 6227972

@@ -46,12 +46,12 @@ let solve2 strs =
   |> snd
 
 let parse s = s |> List.fst |> sp ','
-let solve_part_1 lines = lines |> parse |> solve1 |> string_of_int
-let solve_part_2 lines = lines |> parse |> solve2 |> string_of_int
+let solve_part_1 lines = lines |> parse |> solve1
+let solve_part_2 lines = lines |> parse |> solve2
 
 (* tests *)
 (* change 1->2 if sample data differs by part *)
-let%test "day 15 part 1 sample" = test_sample 15 1 solve_part_1 "1320"
-let%test "day 15 part 2 sample" = test_sample 15 1 solve_part_2 "145"
-let%test "day 15 part 1" = test_full 15 solve_part_1 "517551"
-let%test "day 15 part 2" = test_full 15 solve_part_2 "286097"
+let%test "day 15 part 1 sample" = test_sample 15 1 solve_part_1 1320
+let%test "day 15 part 2 sample" = test_sample 15 1 solve_part_2 145
+let%test "day 15 part 1" = test_full 15 solve_part_1 517551
+let%test "day 15 part 2" = test_full 15 solve_part_2 286097

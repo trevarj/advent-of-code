@@ -44,7 +44,7 @@ let lcm a b = a / gcd a b * b
 
 let solve_part_1 lines =
   let dirs, map = parse lines in
-  string_of_int (traverse key_p1 map "AAA" dirs)
+  traverse key_p1 map "AAA" dirs
 
 let solve_part_2 lines =
   let dirs, map = parse lines in
@@ -54,9 +54,9 @@ let solve_part_2 lines =
       (Lookup.to_list !map)
   in
   let paths = List.map (fun start -> traverse key_p2 map start dirs) starts in
-  string_of_int @@ List.fold_left lcm (List.hd paths) paths
+  List.fold_left lcm (List.hd paths) paths
 
-let%test "day 8 part 1 sample" = test_sample 8 1 solve_part_1 "6"
-let%test "day 8 part 2 sample" = test_sample 8 2 solve_part_2 "6"
-let%test "day 8 part 1" = test_full 8 solve_part_1 "12083"
-let%test "day 8 part 2" = test_full 8 solve_part_2 "13385272668829"
+let%test "day 8 part 1 sample" = test_sample 8 1 solve_part_1 6
+let%test "day 8 part 2 sample" = test_sample 8 2 solve_part_2 6
+let%test "day 8 part 1" = test_full 8 solve_part_1 12083
+let%test "day 8 part 2" = test_full 8 solve_part_2 13385272668829

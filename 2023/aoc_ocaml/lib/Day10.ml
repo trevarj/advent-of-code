@@ -54,7 +54,7 @@ let rec shoelace = function
 let get_loop lines = lines |> parse |> walk
 
 let solve_part_1 lines =
-  lines |> get_loop |> List.length |> (Fun.flip Int.div) 2 |> string_of_int
+  lines |> get_loop |> List.length |> (Fun.flip Int.div) 2
 
 (*
 https://en.wikipedia.org/wiki/Shoelace_formula
@@ -64,10 +64,10 @@ TODO: implement using : https://en.wikipedia.org/wiki/Flood_fill
 *)
 let solve_part_2 lines =
   let loop = get_loop lines in
-  (abs (shoelace loop) - List.length loop + 3) / 2 |> string_of_int
+  (abs (shoelace loop) - List.length loop + 3) / 2
 
 (* tests *)
-let%test "day 10 part 1 sample" = test_sample 10 1 solve_part_1 "8"
-let%test "day 10 part 2 sample" = test_sample 10 2 solve_part_2 "10"
-let%test "day 10 part 1" = test_full 10 solve_part_1 "6828"
-let%test "day 10 part 2" = test_full 10 solve_part_2 "459"
+let%test "day 10 part 1 sample" = test_sample 10 1 solve_part_1 8
+let%test "day 10 part 2 sample" = test_sample 10 2 solve_part_2 10
+let%test "day 10 part 1" = test_full 10 solve_part_1 6828
+let%test "day 10 part 2" = test_full 10 solve_part_2 459

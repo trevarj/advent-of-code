@@ -25,18 +25,16 @@ let combine_first_last_digit chars =
   (first, last) |> combine_chars |> int_of_string
 
 let solve_part_1 lines =
-  lines
-  |> List.map (String.to_chars >> combine_first_last_digit)
-  |> List.sum |> string_of_int
+  lines |> List.map (String.to_chars >> combine_first_last_digit) |> List.sum
 
 let solve_part_2 lines =
   lines
   |> List.map
        (String.to_chars >> convert_digit_words >> combine_first_last_digit)
-  |> List.sum |> string_of_int
+  |> List.sum
 
 (* tests *)
-let%test "day 1 part 1 sample" = Util.test_sample 1 1 solve_part_1 "142"
-let%test "day 1 part 2 sample" = Util.test_sample 1 2 solve_part_2 "281"
-let%test "day 1 part 1" = Util.test_full 1 solve_part_1 "54644"
-let%test "day 1 part 2" = Util.test_full 1 solve_part_2 "53348"
+let%test "day 1 part 1 sample" = Util.test_sample 1 1 solve_part_1 142
+let%test "day 1 part 2 sample" = Util.test_sample 1 2 solve_part_2 281
+let%test "day 1 part 1" = Util.test_full 1 solve_part_1 54644
+let%test "day 1 part 2" = Util.test_full 1 solve_part_2 53348

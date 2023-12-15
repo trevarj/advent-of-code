@@ -62,7 +62,7 @@ let calculate_parts validator arrays =
 
 let solve validator accumulator lines =
   let map = lines |> String.to_2d_array |> calculate_parts validator in
-  PairsMap.fold accumulator map 0 |> string_of_int
+  PairsMap.fold accumulator map 0
 
 let solve_part_1 lines =
   solve is_symbol
@@ -75,7 +75,7 @@ let solve_part_2 lines =
     lines
 
 (* tests *)
-let%test "day 3 part 1 sample" = test_sample 3 1 solve_part_1 "4361"
-let%test "day 3 part 2 sample" = test_sample 3 2 solve_part_2 "467835"
-let%test "day 3 part 1" = test_full 3 solve_part_1 "530849"
-let%test "day 3 part 2" = test_full 3 solve_part_2 "84900879"
+let%test "day 3 part 1 sample" = test_sample 3 1 solve_part_1 4361
+let%test "day 3 part 2 sample" = test_sample 3 2 solve_part_2 467835
+let%test "day 3 part 1" = test_full 3 solve_part_1 530849
+let%test "day 3 part 2" = test_full 3 solve_part_2 84900879
