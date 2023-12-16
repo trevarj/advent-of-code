@@ -1,3 +1,16 @@
+(* a map type to use a tuple as the key and 't as the value *)
+module IntPairs = struct
+  type t = int * int
+
+  let create x y : t = (x, y)
+
+  let compare (x0, y0) (x1, y1) =
+    match Stdlib.compare x0 x1 with 0 -> Stdlib.compare y0 y1 | c -> c
+end
+
+module PairSet = Set.Make (IntPairs)
+module PairsMap = Map.Make (IntPairs)
+
 module String = struct
   include String
 
@@ -153,6 +166,7 @@ let test_full day solution_fn want =
   debug_result got want
 
 let ( >> ) f g x = g (f x)
+let ( << ) f g x = f (g x)
 let is_digit = function '0' .. '9' -> true | _ -> false
 
 let print_list f list =

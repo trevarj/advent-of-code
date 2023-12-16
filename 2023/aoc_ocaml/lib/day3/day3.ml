@@ -1,16 +1,6 @@
 open List
 open Util
 
-(* a map type to use a tuple as the key and 't as the value *)
-module IntPairs = struct
-  type t = int * int
-
-  let compare (x0, y0) (x1, y1) =
-    match Stdlib.compare x0 x1 with 0 -> Stdlib.compare y0 y1 | c -> c
-end
-
-module PairsMap = Map.Make (IntPairs)
-
 let is_symbol = function
   | Some '.' | Some '0' .. '9' | None -> false
   | _ -> true
