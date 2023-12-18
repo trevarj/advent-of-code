@@ -21,16 +21,16 @@ let check_adjacent x y arrays pred =
 let calculate_parts validator arrays =
   let current_num = ref ""
   and current_symbol = ref None
-  and symbol_map = ref PairsMap.empty in
+  and symbol_map = ref PairMap.empty in
   let resolve () =
     (match (int_of_string_opt !current_num, !current_symbol) with
     | Some n, Some coord ->
         let parts =
-          match PairsMap.find_opt coord !symbol_map with
+          match PairMap.find_opt coord !symbol_map with
           | Some l -> n :: l
           | None -> n :: []
         in
-        symbol_map := PairsMap.add coord parts !symbol_map
+        symbol_map := PairMap.add coord parts !symbol_map
     | _, _ -> ());
     current_num := "";
     current_symbol := None
@@ -52,7 +52,7 @@ let calculate_parts validator arrays =
 
 let solve validator accumulator lines =
   let map = lines |> String.to_2d_array |> calculate_parts validator in
-  PairsMap.fold accumulator map 0
+  PairMap.fold accumulator map 0
 
 let solve_part_1 lines =
   solve is_symbol

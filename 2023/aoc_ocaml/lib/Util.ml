@@ -1,5 +1,4 @@
-(* a map type to use a tuple as the key and 't as the value *)
-module IntPairs = struct
+module IntPair = struct
   type t = int * int
 
   let create x y : t = (x, y)
@@ -8,8 +7,8 @@ module IntPairs = struct
     match Stdlib.compare x0 x1 with 0 -> Stdlib.compare y0 y1 | c -> c
 end
 
-module PairSet = Set.Make (IntPairs)
-module PairsMap = Map.Make (IntPairs)
+module PairSet = Set.Make (IntPair)
+module PairMap = Map.Make (IntPair)
 
 module String = struct
   include String
@@ -26,6 +25,12 @@ module String = struct
     List.rev lines
     |> List.fold_left (fun acc line -> to_chars line :: acc) []
     |> List.map Array.of_list |> Array.of_list
+end
+
+module Char = struct
+  include Char
+
+  let to_int c = int_of_char c - 48
 end
 
 module List = struct
@@ -138,6 +143,41 @@ module Array = struct
     let width = Array.length matrix.(0) and height = Array.length matrix in
     if y >= 0 && y < height && x >= 0 && x < width then Some matrix.(y).(x)
     else None
+end
+
+(* NOTE: all positions are assumed (y, x) based for legibility in the repl
+   and because i'm an idiot! *)
+module Grid = struct
+  type 'a t = 'a array array
+
+  let up = (-1, 0)
+  let down = (1, 0)
+  let left = (0, -1)
+  let right = (0, 1)
+  let ( ++ ) (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
+  let ( -- ) (x1, y1) (x2, y2) = (x1 - x2, y1 - y2)
+  let move pos dir = pos ++ dir
+
+  let find_map_neighbor pred pos grid =
+    let y, x = pos in
+    List.find_map
+      (fun (y_off, x_off) ->
+        let npos = (y + y_off, x + x_off) in
+        pred (y_off, x_off) npos @@ Array.get_opt (snd npos) (fst npos) grid)
+      [ up; down; left; right ]
+
+  let filter_neighbors pred pos grid =
+    let y, x = pos in
+    List.filter_map
+      (fun (y_off, x_off) ->
+        let npos = (y + y_off, x + x_off) in
+        match Array.get_opt (snd npos) (fst npos) grid with
+        | Some n -> pred (y_off, x_off) npos n
+        | None -> None)
+      [ up; down; left; right ]
+
+  let neighbors pos grid =
+    filter_neighbors (fun dir pos n -> Some (dir, pos, n)) pos grid
 end
 
 let sp = String.split_on_char

@@ -18,7 +18,7 @@ let card_of_char has_jokers = function
   | 'J' when has_jokers -> Joker
   | 'J' -> Jack
   | 'T' -> Number 10
-  | c when is_digit c -> Number (int_of_char c - 48)
+  | c when is_digit c -> Number (Char.to_int c)
   | _ -> assert false
 
 let card_rank = function
