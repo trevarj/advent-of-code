@@ -46,11 +46,6 @@ let walk tiles =
   in
   walk' start start []
 
-let rec shoelace = function
-  | (x1, y1) :: (x2, y2) :: xs ->
-      ((y1 + y2) * (x2 - x1)) + shoelace ((x2, y2) :: xs)
-  | _ -> 0
-
 let get_loop lines = lines |> parse |> walk
 
 let solve_part_1 lines =

@@ -237,3 +237,10 @@ let rec chars_intercalate ch = function
   | [] -> []
   | [ c ] -> [ c ]
   | c :: cs -> c :: ch :: chars_intercalate ch cs
+
+let rec shoelace = function
+  | (x1, y1) :: (x2, y2) :: xs ->
+      ((y1 + y2) * (x2 - x1)) + shoelace ((x2, y2) :: xs)
+  | _ -> 0
+
+let manhattan_distance (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
