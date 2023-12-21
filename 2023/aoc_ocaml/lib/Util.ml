@@ -181,6 +181,9 @@ module Grid = struct
 end
 
 let sp = String.split_on_char
+let sps sep = Str.split (Str.regexp (sep ^ "+"))
+let sl = String.length
+let ssub = String.sub
 let get_lines = sp '\n'
 
 let open_data_sample day part =

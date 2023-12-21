@@ -9,9 +9,6 @@ type rule = condition * destination
 
 module RangeMap = Map.Make (String)
 
-let sl = String.length
-let ssub = String.sub
-
 let part_of_list = function
   | [ x; m; a; s ] -> { x; m; a; s }
   | _ -> assert false
