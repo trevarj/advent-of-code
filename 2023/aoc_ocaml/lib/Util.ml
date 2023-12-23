@@ -157,6 +157,20 @@ module Grid = struct
   let ( ++ ) (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
   let ( -- ) (x1, y1) (x2, y2) = (x1 - x2, y1 - y2)
   let move pos dir = pos ++ dir
+  let mark grid path = List.iter (fun (y, x) -> grid.(y).(x) <- 'O') path
+
+  let orthogonal = function
+    | dir when up = dir || down = dir -> [ left; right ]
+    | dir when left = dir || right = dir -> [ up; down ]
+    | _ -> assert false
+
+  let print grid =
+    for i = 0 to Array.length grid - 1 do
+      for j = 0 to Array.length grid.(0) - 1 do
+        print_char grid.(i).(j)
+      done;
+      print_newline ()
+    done
 
   let find_map_neighbor pred pos grid =
     let y, x = pos in
