@@ -61,6 +61,18 @@ module List = struct
     in
     group' [] list
 
+  let rec permutations list =
+    let rec p' x xs =
+      match xs with
+      | [] -> []
+      | xx :: [] -> (x, xx) :: []
+      | xx :: xxs -> (x, xx) :: p' x xxs
+    in
+    match list with [] -> [] | x :: xs -> p' x xs @ permutations xs
+
+  let cartesian l l' =
+    List.concat (List.map (fun e -> List.map (fun e' -> (e, e')) l') l)
+
   let last list = List.hd @@ List.rev list
 
   let split sep list =

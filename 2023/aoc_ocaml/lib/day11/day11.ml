@@ -26,22 +26,14 @@ let locate_galaxies multiplier matrix =
     matrix;
   !galaxies
 
-let rec permutations list =
-  let rec p' x xs =
-    match xs with
-    | [] -> []
-    | xx :: [] -> (x, xx) :: []
-    | xx :: xxs -> (x, xx) :: p' x xxs
-  in
-  match list with [] -> [] | x :: xs -> p' x xs @ permutations xs
-
 let distance_sum pairs =
   List.fold_right
     (fun ((x1, y1), (x2, y2)) acc -> acc + (abs (x2 - x1) + abs (y2 - y1)))
     pairs 0
 
 let solve m lines =
-  lines |> parse |> expand |> locate_galaxies m |> permutations |> distance_sum
+  lines |> parse |> expand |> locate_galaxies m |> List.permutations
+  |> distance_sum
 
 let solve_part_1 = solve 2
 let solve_part_2 = solve 100000

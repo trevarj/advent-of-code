@@ -57,4 +57,6 @@ let make_files day =
 
 let () =
   Arg.parse args (fun _ -> ()) usage;
-  if !new_day then make_files next_day
+  let n = next_day in
+  if !new_day && n <= 25 then make_files n
+  else print_string "already reached 25th day\n"
