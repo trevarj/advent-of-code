@@ -44,13 +44,12 @@ data Day
   | Day25
   deriving (Enum, Read, Show)
 
-data Command = GenerateDay | Run Day | RunAll
+data Command = Run Day | RunAll
 
 main :: IO ()
 main = do
   args <- getArgs
   case parseArgs args of
-    GenerateDay -> return () {- TODO  -}
     RunAll -> return () {- TODO -}
     Run day -> do
       putStrLn $ "Testing " ++ show day
@@ -62,7 +61,6 @@ main = do
 
 parseArgs :: [String] -> Command
 parseArgs [] = RunAll
-parseArgs ("g" : _) = GenerateDay
 parseArgs (arg : _) = case readMaybe arg of
   Just day -> Run day
   Nothing -> error "no day provided"
@@ -81,8 +79,8 @@ printResult (name, got, want)
 
 printResults :: [TestResult] -> IO ()
 printResults [] = pure ()
-printResults (r : rs) = do
-  putStrLn . printResult $ r
+printResults (res : rs) = do
+  putStrLn . printResult $ res
   printResults rs
 
 getSessionKey :: IO String

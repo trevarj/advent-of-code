@@ -54,6 +54,30 @@ library
     -- Modules exported by the library.
     exposed-modules:  AoC
                       Day1
+                      Day2
+                      Day3
+                      Day4
+                      Day5
+                      Day6
+                      Day7
+                      Day8
+                      Day9
+                      Day10
+                      Day11
+                      Day12
+                      Day13
+                      Day14
+                      Day15
+                      Day16
+                      Day17
+                      Day18
+                      Day19
+                      Day20
+                      Day21
+                      Day22
+                      Day23
+                      Day24
+                      Day25
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -80,6 +104,30 @@ test-suite test
     -- Modules included in this executable, other than Main.
     other-modules:
         Day1Tests
+        Day2Tests
+        Day3Tests
+        Day4Tests
+        Day5Tests
+        Day6Tests
+        Day7Tests
+        Day8Tests
+        Day9Tests
+        Day10Tests
+        Day11Tests
+        Day12Tests
+        Day13Tests
+        Day14Tests
+        Day15Tests
+        Day16Tests
+        Day17Tests
+        Day18Tests
+        Day19Tests
+        Day20Tests
+        Day21Tests
+        Day22Tests
+        Day23Tests
+        Day24Tests
+        Day25Tests
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
