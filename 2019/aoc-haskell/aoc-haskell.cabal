@@ -52,7 +52,8 @@ library
     import:           warnings
 
     -- Modules exported by the library.
-    exposed-modules:  AoC
+    exposed-modules:  
+                      AoC.Intcode
                       Day1
                       Day2
                       Day3
@@ -86,10 +87,13 @@ library
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.17.2.0
+    build-depends:    base ^>=4.17.2.0,
+                      split,
+                      vector >= 0.13.1.0,
 
     -- Directories containing source files.
     hs-source-dirs:   lib
+                      lib/AoC
 
     -- Base language which the package is written in.
     default-language: Haskell2010
@@ -137,6 +141,7 @@ test-suite test
 
     -- Directories containing source files.
     hs-source-dirs:   test
+                      test/Tests
 
     -- The entrypoint to the test suite.
     main-is:          Main.hs
