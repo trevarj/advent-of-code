@@ -1,9 +1,7 @@
 module Day2 (solvePart1, solvePart2) where
 
 import AoC.Intcode (Program, interpret)
-import Data.List (find)
 import Data.List.Split (splitOn)
-import Data.Maybe (fromJust)
 import Data.Vector ((//))
 import qualified Data.Vector as V
 
@@ -22,9 +20,9 @@ solvePart1 = solve 12 2 . program
 solvePart2 :: [String] -> Int
 solvePart2 lns =
   let prog = program lns
-   in let (noun, verb) =
-            fromJust $
-              find
-                (\(a, b) -> 19690720 == solve a b prog)
-                [(i, j) | i <- [0 .. 99], j <- [0 .. 99]]
-       in 100 * noun + verb
+   in head
+        [ 100 * noun + verb
+          | noun <- [0 .. 99],
+            verb <- [0 .. 99],
+            solve noun verb prog == 19690720
+        ]
