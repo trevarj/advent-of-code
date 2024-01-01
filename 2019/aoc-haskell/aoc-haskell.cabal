@@ -90,7 +90,7 @@ library
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base        ^>=4.18.1.0
+    , base       ^>=4.17.2.1
     , containers  >=0.6.8
     , split
     , vector      >=0.13.1.0
@@ -151,7 +151,7 @@ test-suite test
   -- Test dependencies.
   build-depends:
     , aoc-haskell
-    , base             ^>=4.18.1.0
+    , base             ^>=4.17.2.1
     , bytestring
     , directory        >=1.3.8.2
     , http-client      >=0.7.15
