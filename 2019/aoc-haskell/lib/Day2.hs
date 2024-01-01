@@ -22,7 +22,7 @@ solvePart2 lns =
   let prog = program lns
    in head
         [ 100 * noun + verb
-          | noun <- [0 .. 99],
-            verb <- [0 .. 99],
-            solve noun verb prog == 19690720
+        | noun <- [0 .. 99]
+        , verb <- [0 .. 99]
+        , solve noun verb prog == 19690720
         ]

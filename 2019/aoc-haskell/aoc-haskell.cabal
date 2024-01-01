@@ -1,4 +1,5 @@
-cabal-version:      3.4
+cabal-version: 3.4
+
 -- The cabal-version field refers to the version of the .cabal specification,
 -- and can be different from the cabal-install (the tool) version and the
 -- Cabal (the library) version you are using. As such, the Cabal (the library)
@@ -11,7 +12,7 @@ cabal-version:      3.4
 --   http://haskell.org/cabal/users-guide/
 --
 -- The name of the package.
-name:               aoc-haskell
+name:          aoc-haskell
 
 -- The package version.
 -- See the Haskell package versioning policy (PVP) for standards
@@ -20,7 +21,7 @@ name:               aoc-haskell
 -- PVP summary:     +-+------- breaking API changes
 --                  | | +----- non-breaking API additions
 --                  | | | +--- code changes with no API change
-version:            0.1.0.0
+version:       0.1.0.0
 
 -- A short (one-line) description of the package.
 -- synopsis:
@@ -29,131 +30,132 @@ version:            0.1.0.0
 -- description:
 
 -- The license under which the package is released.
-license:            NONE
+license:
 
 -- The package author(s).
-author:             Trevor Arjeski
+author:        Trevor Arjeski
 
 -- An email address to which users can send suggestions, bug reports, and patches.
-maintainer:         tmarjeski@gmail.com
+maintainer:    tmarjeski@gmail.com
 
 -- A copyright notice.
 -- copyright:
-build-type:         Simple
+build-type:    Simple
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
 
 common warnings
-    ghc-options: -Wall
+  ghc-options: -Wall
 
 library
-    -- Import common warning flags.
-    import:           warnings
+  -- Import common warning flags.
+  import:           warnings
 
-    -- Modules exported by the library.
-    exposed-modules:  
-                      AoC.Intcode
-                      Day1
-                      Day2
-                      Day3
-                      Day4
-                      Day5
-                      Day6
-                      Day7
-                      Day8
-                      Day9
-                      Day10
-                      Day11
-                      Day12
-                      Day13
-                      Day14
-                      Day15
-                      Day16
-                      Day17
-                      Day18
-                      Day19
-                      Day20
-                      Day21
-                      Day22
-                      Day23
-                      Day24
-                      Day25
+  -- Modules exported by the library.
+  exposed-modules:
+    AoC.Grid
+    AoC.Intcode
+    Day1
+    Day10
+    Day11
+    Day12
+    Day13
+    Day14
+    Day15
+    Day16
+    Day17
+    Day18
+    Day19
+    Day2
+    Day20
+    Day21
+    Day22
+    Day23
+    Day24
+    Day25
+    Day3
+    Day4
+    Day5
+    Day6
+    Day7
+    Day8
+    Day9
 
-    -- Modules included in this library but not exported.
-    -- other-modules:
+  -- Modules included in this library but not exported.
+  -- other-modules:
 
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
 
-    -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.17.2.0,
-                      split,
-                      vector >= 0.13.1.0,
+  -- Other library packages from which modules are imported.
+  build-depends:
+    , base        ^>=4.18.1.0
+    , containers  >=0.6.8
+    , split
+    , vector      >=0.13.1.0
 
-    -- Directories containing source files.
-    hs-source-dirs:   lib
-                      lib/AoC
+  -- Directories containing source files.
+  hs-source-dirs:   lib lib/AoC
 
-    -- Base language which the package is written in.
-    default-language: Haskell2010
+  -- Base language which the package is written in.
+  default-language: Haskell2010
 
 test-suite test
-    -- Import common warning flags.
-    import:           warnings
+  -- Import common warning flags.
+  import:           warnings
 
-    -- Base language which the package is written in.
-    default-language: Haskell2010
+  -- Base language which the package is written in.
+  default-language: Haskell2010
 
-    -- Modules included in this executable, other than Main.
-    other-modules:
-        Day1Tests
-        Day2Tests
-        Day3Tests
-        Day4Tests
-        Day5Tests
-        Day6Tests
-        Day7Tests
-        Day8Tests
-        Day9Tests
-        Day10Tests
-        Day11Tests
-        Day12Tests
-        Day13Tests
-        Day14Tests
-        Day15Tests
-        Day16Tests
-        Day17Tests
-        Day18Tests
-        Day19Tests
-        Day20Tests
-        Day21Tests
-        Day22Tests
-        Day23Tests
-        Day24Tests
-        Day25Tests
+  -- Modules included in this executable, other than Main.
+  other-modules:
+    Day10Tests
+    Day11Tests
+    Day12Tests
+    Day13Tests
+    Day14Tests
+    Day15Tests
+    Day16Tests
+    Day17Tests
+    Day18Tests
+    Day19Tests
+    Day1Tests
+    Day20Tests
+    Day21Tests
+    Day22Tests
+    Day23Tests
+    Day24Tests
+    Day25Tests
+    Day2Tests
+    Day3Tests
+    Day4Tests
+    Day5Tests
+    Day6Tests
+    Day7Tests
+    Day8Tests
+    Day9Tests
 
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
 
-    -- The interface type and version of the test suite.
-    type:             exitcode-stdio-1.0
+  -- The interface type and version of the test suite.
+  type:             exitcode-stdio-1.0
 
-    -- Directories containing source files.
-    hs-source-dirs:   test
-                      test/Tests
+  -- Directories containing source files.
+  hs-source-dirs:   test test/Tests
 
-    -- The entrypoint to the test suite.
-    main-is:          Main.hs
+  -- The entrypoint to the test suite.
+  main-is:          Main.hs
 
-    -- Test dependencies.
-    build-depends:
-        base ^>=4.17.2.0,
-        bytestring,
-        directory >= 1.3.8.2,
-        http-client >=0.7.15,
-        http-client-tls >=0.3.6.3,
-        http-conduit >= 2.3.8.3,
-        text,
-        time, 
-        aoc-haskell
+  -- Test dependencies.
+  build-depends:
+    , aoc-haskell
+    , base             ^>=4.18.1.0
+    , bytestring
+    , directory        >=1.3.8.2
+    , http-client      >=0.7.15
+    , http-client-tls  >=0.3.6.3
+    , http-conduit     >=2.3.8.3
+    , text
+    , time
