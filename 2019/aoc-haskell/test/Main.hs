@@ -122,7 +122,7 @@ runDayTests input = map (\t -> t input)
 printResult :: TestResult -> String
 printResult (name, got, want)
   | got == want = name ++ ": ✅"
-  | otherwise = name ++ ": ❎ => expected " ++ show got ++ ", but got " ++ show want
+  | otherwise = name ++ ": ❎ => expected " ++ show want ++ ", but got " ++ show got
 
 printResults :: [TestResult] -> IO ()
 printResults [] = pure ()
