@@ -106,7 +106,7 @@ login."
           (make-directory aoc-input-directory))
         (request (format "https://adventofcode.com/%d/day/%d/input" year day)
           :headers `(("Cookie" . ,(format "session=%s" aoc-session-cookie)))
-          :error #'aoc-fetch-input-error
+          :error #'aoc--fetch-input-error
           :success (cl-function
                     (lambda (&key data &allow-other-keys)
                       (with-temp-file input-file-path
