@@ -53,8 +53,22 @@ login."
   :group 'aoc
   :type 'number)
 
+(defcustom aoc-day-level '(1 1)
+  "The day and level of AoC being worked on. Increments on correct solution."
+  :group 'aoc
+  :type 'list)
+
 (cl-defun aoc--fetch-input-error (&key status &allow-other-keys)
   (message "Could not fetch input file: %s" status))
+
+(defun aoc--increment-day-level ()
+  "Increment the `aoc-day-level' pair."
+  (let ((day (car aoc-day-level))
+        (level (cadr aoc-day-level)))
+    (if (and (eq level 2)
+             (<= day 25))
+        (setf aoc-day-level `(,(1+ day) 1))
+      (setf aoc-day-level `(,day ,(1+ level))))))
 
 (defun aoc--render-data-to-help-buffer (data buffer)
   "Render HTML data (if non-nil) and open it in a help buffer."
@@ -69,6 +83,7 @@ login."
 (cl-defun aoc--check-submit-response (&key data &allow-other-keys)
   (if (cl-search "That's not the right answer." data)
       (message "Incorrect answer." nil)
+    (aoc--increment-day-level)
     (aoc--render-data-to-help-buffer data "*aoc submission*")
     (message "Answer submitted successfully.")))
 
@@ -102,7 +117,7 @@ login."
 (defun aoc-view-problem (year day)
   "View AoC problem for given year and day."
   (interactive (list (read-number "Year: " aoc-year)
-                     (read-number "Day: ")))
+                     (read-number "Day: " (car aoc-day-level))))
   (request (format "https://adventofcode.com/%d/day/%d" year day)
     :headers `(("Cookie" . ,(format "session=%s" aoc-session-cookie)))
     :parse 'buffer-string
@@ -115,8 +130,8 @@ login."
 (defun aoc-submit-answer (year day level answer)
   "Submit a solution for given year, day and level."
   (interactive (list (read-number "Year: " aoc-year)
-                     (read-number "Day: ")
-                     (read-number "Level: ")
+                     (read-number "Day: " (car aoc-day-level))
+                     (read-number "Level: " (cadr aoc-day-level))
                      (read-string "Answer: ")))
   (request (format "https://adventofcode.com/%d/day/%d/answer" year day)
     :type "POST"
