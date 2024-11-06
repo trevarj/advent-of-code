@@ -21,6 +21,9 @@
 
 ;;; Commentary:
 
+;; It is recommended to use savehist's `savehist-additional-variables' to
+;; preserve `aoc-year' and `aoc-day-level' across Emacs restarts.
+
 ;; Advent of Code utilities to fetch and save problems and also submit an
 ;; answer.
 
@@ -56,7 +59,7 @@ login."
 (defcustom aoc-day-level '(1 1)
   "The day and level of AoC being worked on. Increments on correct solution."
   :group 'aoc
-  :type 'list)
+  :type '(cons number number))
 
 (cl-defun aoc--fetch-input-error (&key status &allow-other-keys)
   (message "Could not fetch input file: %s" status))
@@ -133,6 +136,13 @@ login."
                      (read-number "Day: " (car aoc-day-level))
                      (read-number "Level: " (cadr aoc-day-level))
                      (read-string "Answer: ")))
+  (when (and (not (and (eq year aoc-year)
+                       (equal '(day level) aoc-day-level)))
+             (yes-or-no-p
+              (format "Set current problem to %d, Day %d Level %d?"
+                      year day level)))
+    (setopt aoc-year year
+            aoc-day-level (cons day level)))
   (request (format "https://adventofcode.com/%d/day/%d/answer" year day)
     :type "POST"
     :headers `(("Cookie" . ,(format "session=%s" aoc-session-cookie)))
