@@ -26,8 +26,12 @@
 
 ;;; Code:
 
-(require 'request)
+;; Built-ins
 (require 'cl-lib)
+(require 'shr)
+
+;; External
+(require 'request)
 
 (defgroup aoc nil
   "Customization variables for Advent of Code (aoc.el).")
@@ -56,28 +60,6 @@ login."
 
 (cl-defun aoc--fetch-input-error (&key status &allow-other-keys)
   (message "Could not fetch input file: %s" status))
-
-(defun aoc-fetch-input (year day &optional force)
-  "Fetches input file for given year and day."
-  (interactive (list (read-number "Year: " aoc-year)
-                     (read-number "Day: " aoc-day)))
-  (if (string-empty-p aoc-session-cookie)
-      (message "`aoc-session-cookie' not set.")
-    (let ((input-file-path
-           (expand-file-name (format "%d.txt" day) aoc-input-directory)))
-      (if (and (file-exists-p input-file-path)
-               (not force))
-          (message "Input file for day %d already exists at %s" day input-file-path)
-        (unless (file-directory-p aoc-input-directory)
-          (make-directory aoc-input-directory))
-        (request (format "https://adventofcode.com/%d/day/%d/input" year day)
-          :headers `(("Cookie" . ,(format "session=%s" aoc-session-cookie)))
-          :error #'aoc-fetch-input-error
-          :success (cl-function
-                    (lambda (&key data &allow-other-keys)
-                      (with-temp-file input-file-path
-                        (insert data))
-                      (message "Wrote day %d input file: %s" day input-file-path))))))))
 
 (defun aoc--increment-day-level ()
   "Increment the `aoc-day-level' pair."
@@ -108,6 +90,30 @@ login."
 (cl-defun aoc--submit-error (&key status &allow-other-keys)
   (message "Could not submit answer: %s" status))
 
+;;;###autoload
+(defun aoc-fetch-input (year day &optional force)
+  "Fetches input file for given year and day."
+  (interactive (list (read-number "Year: " aoc-year)
+                     (read-number "Day: " aoc-day)))
+  (if (string-empty-p aoc-session-cookie)
+      (message "`aoc-session-cookie' not set.")
+    (let ((input-file-path
+           (expand-file-name (format "%d.txt" day) aoc-input-directory)))
+      (if (and (file-exists-p input-file-path)
+               (not force))
+          (message "Input file for day %d already exists at %s" day input-file-path)
+        (unless (file-directory-p aoc-input-directory)
+          (make-directory aoc-input-directory))
+        (request (format "https://adventofcode.com/%d/day/%d/input" year day)
+          :headers `(("Cookie" . ,(format "session=%s" aoc-session-cookie)))
+          :error #'aoc-fetch-input-error
+          :success (cl-function
+                    (lambda (&key data &allow-other-keys)
+                      (with-temp-file input-file-path
+                        (insert data))
+                      (message "Wrote day %d input file: %s" day input-file-path))))))))
+
+;;;###autoload
 (defun aoc-view-problem (year day)
   "View AoC problem for given year and day."
   (interactive (list (read-number "Year: " aoc-year)
@@ -120,6 +126,7 @@ login."
                  (aoc--render-data-to-help-buffer
                   data (format "*AoC Day %d Year %d" day year))))))
 
+;;;###autoload
 (defun aoc-submit-answer (year day level answer)
   "Submit a solution for given year, day and level."
   (interactive (list (read-number "Year: " aoc-year)
