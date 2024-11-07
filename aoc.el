@@ -56,7 +56,7 @@ login."
   :group 'aoc
   :type 'number)
 
-(defcustom aoc-day-level '(1 1)
+(defcustom aoc-day-level '(1 . 1)
   "The day and level of AoC being worked on. Increments on correct solution."
   :group 'aoc
   :type '(cons number number))
@@ -66,12 +66,11 @@ login."
 
 (defun aoc--increment-day-level ()
   "Increment the `aoc-day-level' pair."
-  (let ((day (car aoc-day-level))
-        (level (cadr aoc-day-level)))
-    (if (and (eq level 2)
-             (<= day 25))
-        (setf aoc-day-level `(,(1+ day) 1))
-      (setf aoc-day-level `(,day ,(1+ level))))))
+  (setf aoc-day-level
+        (pcase aoc-day-level
+          (`(25 . 2) (cons 25 2))
+          (`(,day . 2) (cons (1+ day) 1))
+          (`(,day . 1) (cons day 2)))))
 
 (defun aoc--render-data-to-help-buffer (data buffer)
   "Render HTML data (if non-nil) and open it in a help buffer."
