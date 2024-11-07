@@ -40,7 +40,7 @@
   "Customization variables for Advent of Code (aoc.el).")
 
 (defcustom aoc-session-cookie ""
-  "The 'session' cookie found within the browser on adventofcode.com after you
+  "The session cookie found within the browser on adventofcode.com after you
 login."
   :group 'aoc
   :type 'string)
@@ -84,7 +84,7 @@ login."
 
 (cl-defun aoc--check-submit-response (&key data &allow-other-keys)
   (if (cl-search "That's not the right answer." data)
-      (message "Incorrect answer." nil)
+      (message "Incorrect answer.")
     (aoc--increment-day-level)
     (aoc--render-data-to-help-buffer data "*aoc submission*")
     (message "Answer submitted successfully.")))
@@ -96,7 +96,7 @@ login."
 (defun aoc-fetch-input (year day &optional force)
   "Fetches input file for given year and day."
   (interactive (list (read-number "Year: " aoc-year)
-                     (read-number "Day: " aoc-day)))
+                     (read-number "Day: " (car aoc-day-level))))
   (if (string-empty-p aoc-session-cookie)
       (message "`aoc-session-cookie' not set.")
     (let ((input-file-path
