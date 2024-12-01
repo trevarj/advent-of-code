@@ -22,8 +22,38 @@
 ;;; Code:
 
 (require 'aoc-2024)
+(require 'dash)
 
-(read-input-lines)
+(defvar sample-input "3   4
+4   3
+2   5
+1   3
+3   9
+3   3")
+
+(defun parse (lines)
+  (-unzip-lists lines))
+
+(defun solve-1 (input)
+  (->> (parse input)
+       (-map #'sort)
+       (funcall (-applify #'-zip-lists))
+       (-map (-applify (-compose #'abs #'-)))
+       (-sum)))
+
+(defun solve-2 (input)
+  (let* ((lists (parse input))
+         (freq (-frequencies (cadr lists))))
+    (->> (car lists)
+         (--map
+          (* it (or (alist-get it freq) 0)))
+         (-sum))))
+
+(solve-1 (sample-input-lines-ints)) ; 11
+(solve-1 (input-lines-ints))
+
+(solve-2 (sample-input-lines-ints)) ; 31
+(solve-2 (input-lines-ints))
 
 (provide 'day1)
 ;;; day1.el ends here

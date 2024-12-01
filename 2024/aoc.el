@@ -28,16 +28,43 @@
 (require 'f)
 (require 's)
 
-(defun read-input-lines ()
+(defun aoc--split-lines (input modifiers)
+  "Split lines with modifiers applied"
+  (-as-> (s-split "\n" input t) line
+         (if (memq 'words modifiers)
+             (-map #'s-split-words line)
+           line)
+         (if (memq 'nums modifiers)
+             (--map (pcase it
+                      ((cl-type list)
+                       (-map #'string-to-number it))
+                      (n (string-to-number n)))
+                    line)
+           line)))
+
+(defun read-input-lines (&rest modifiers)
   "Read lines of input file for corresponding lisp file that called this
 function."
-  (s-split
-   "\n"
-   (f-read
-    (f-join "inputs"
-            (s-append ".txt"
-                      (s-chop-prefix "day" (f-base (buffer-file-name))))))
-   t))
+  (let* ((day (s-chop-prefix "day" (f-base (buffer-file-name))))
+         (input-file (s-append ".txt" day)))
+    (aoc--split-lines (f-read (f-join "inputs" input-file))
+                      modifiers)))
+
+(defun read-sample-input-lines (&rest modifiers)
+  "Read lines of locally defined sample-input lines"
+  (aoc--split-lines sample-input modifiers))
+
+(defun sample-input-lines-ints ()
+  (read-sample-input-lines 'words 'nums))
+
+(defun input-lines-ints ()
+  (read-input-lines 'words 'nums))
+
+(defun sample-lines ()
+  (read-sample-input-lines 'words))
+
+(defun input-lines ()
+  (read-sample-input-lines 'words))
 
 (provide 'aoc-2024)
 ;;; aoc.el ends here
