@@ -53,14 +53,12 @@
   (-count #'is-safe-p input))
 
 (defun solve-2 (input)
-  (-count
-   (--map
-    (-let ((min-len (1- (length it))))
-      (->> it
-           (-powerset)
-           (--filter (>= (length it) min-len))
-           (-any-p #'is-safe-p)
-           )))
+  (--count
+   (-let ((min-len (1- (length it))))
+     (->> it
+          (-powerset)
+          (--filter (>= (length it) min-len))
+          (-any-p #'is-safe-p)))
    input))
 
 (solve-1 (sample-input-lines-ints)) ; 2
