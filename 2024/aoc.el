@@ -28,7 +28,7 @@
 (require 'f)
 (require 's)
 
-(defun aoc--split-lines (input modifiers)
+(defun aoc--split-lines (input &optional modifiers)
   "Split lines with modifiers applied"
   (-as-> (s-split "\n" input t) line
          (if (memq 'words modifiers)
