@@ -66,5 +66,21 @@ function."
 (defun input-lines ()
   (read-sample-input-lines 'words))
 
+(defun aoc-2024-generate-day (day)
+  (interactive (list (read-number "Day: " (car aoc-day-level))))
+  (with-current-buffer (find-file (format "day%d.el" day))
+    (goto-line 26)
+    (insert "
+(require 'aoc-2024)
+(require 'dash)
+
+(defvar sample-input \"\")
+
+(defun parse (lines))
+
+(defun solve-1 (input))
+
+(defun solve-2 (input))")))
+
 (provide 'aoc-2024)
 ;;; aoc.el ends here
