@@ -49,22 +49,19 @@
           (-all-p (-applify #'>) it)
           (-all-p (-applify #'<) it)))))
 
-(defun count-t (lst)
-  (--count it lst))
-
 (defun solve-1 (input)
-  (count-t (-map #'is-safe-p input)))
+  (-count #'is-safe-p input))
 
 (defun solve-2 (input)
-  (count-t
+  (-count
    (--map
     (-let ((min-len (1- (length it))))
       (->> it
            (-powerset)
            (--filter (>= (length it) min-len))
            (-any-p #'is-safe-p)
-           ))
-    input)))
+           )))
+   input))
 
 (solve-1 (sample-input-lines-ints)) ; 2
 (solve-1 (input-lines-ints))
