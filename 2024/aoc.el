@@ -50,8 +50,10 @@ function."
     (aoc--split-lines (f-read (f-join "inputs" input-file))
                       modifiers)))
 
-(defun read-sample-input-lines (&rest modifiers)
+(cl-defun read-sample-input-lines (&rest modifiers &key (override nil))
   "Read lines of locally defined sample-input lines"
+  (when override
+    (setq sample-input override))
   (aoc--split-lines sample-input modifiers))
 
 (defun sample-input-lines-ints ()
@@ -60,8 +62,8 @@ function."
 (defun input-lines-ints ()
   (read-input-lines 'words 'nums))
 
-(defun sample-lines ()
-  (read-sample-input-lines 'words))
+(defun sample-lines (&optional override)
+  (read-sample-input-lines :override override 'words))
 
 (defun input-lines ()
   (read-sample-input-lines 'words))
