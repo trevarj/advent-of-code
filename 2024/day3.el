@@ -32,7 +32,7 @@
 (defvar sample-input-2 "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))")
 
 (defvar regex-1 "mul(\\([1-9][0-9]\\{0,2\\}\\),\\([1-9][0-9]\\{0,2\\}\\))")
-(defvar regex-2 (concat regex-1 "\\|don't\\|do"))
+(defvar regex-2 (concat regex-1 "\\|don't()\\|do()"))
 
 (defun extract-factors (lst)
   (-map (-compose
@@ -40,35 +40,37 @@
          #'cdr)
         lst))
 
-(defun parse-1 (lines)
+(defun parse (regex lines)
   (->> (s-join "" lines)
-       (s-match-strings-all regex-1)
-       (extract-factors)))
+       (s-match-strings-all regex)
+       (-reduce-from #'compute '(:do 0))))
 
-(defun do-or-dont-p (it)
-  (or (equal it '("don't"))
-      (equal it '("do"))))
+(defun parse-instruction (ins)
+  (pcase ins
+    (`(,_ ,a ,b) `(:mul ,(string-to-number a) ,(string-to-number b)))
+    ('("don't()") :dont)
+    ('("do()") :do)))
 
-(defun parse-2 (lines)
-  (->> (s-join "" lines)
-       (s-match-strings-all regex-2)
-       (-partition-before-pred #'do-or-dont-p)
-       (--filter (not (equal (caar it) "don't")))
-       (--map-when (equal (caar it) "do") (cdr it))
-       (-flatten-n 1)
-       (extract-factors)))
+(defun compute (state ins)
+  (pcase (cons state (parse-instruction ins))
+    (`((,_ ,acc) . :dont)
+     `(:dont ,acc))
+    (`((,_ ,acc) . :do)
+     `(:do ,acc))
+    (`((:do ,acc) . (:mul ,a ,b))
+     `(:do ,(+ acc (* a b))))
+    (`(,acc . ,_) acc)))
 
-(defun solve (input parser)
+(defun solve (input regex)
   (->> input
-       (funcall parser)
-       (-map (-applify #'*))
-       (-sum)))
+       (funcall #'parse regex)
+       (cadr)))
 
 (defun solve-1 (input)
-  (solve input #'parse-1))
+  (solve input regex-1))
 
 (defun solve-2 (input)
-  (solve input #'parse-2))
+  (solve input regex-2))
 
 (solve-1 (read-sample-input-lines)) ; 161
 (solve-1 (read-input-lines))
