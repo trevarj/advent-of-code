@@ -14,6 +14,11 @@ from there.
 I didn't want to spend so much time with a new language, so I just decided on
 one I've already dabbled with.
 
+## 2024: Emacs Lisp 
+Trying to have a fun and cozy time. Using the great library
+[dash.el](https://github.com/magnars/dash.el) and not going for efficient
+solutions until Emacs locks up and crashes.
+
 ### Thanks
 Thank you to the following people for help and inspiration:
   - [glguy](https://github.com/glguy/advent)
