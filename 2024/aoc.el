@@ -42,28 +42,31 @@
                     line)
            line)))
 
+(defun read-input ()
+  "Reads input for day as string."
+  (let* ((day (s-chop-prefix "day" (f-base (buffer-file-name))))
+         (input-file (s-append ".txt" day)))
+    (f-read (f-join "inputs" input-file))))
+
 (defun read-input-lines (&rest modifiers)
   "Read lines of input file for corresponding lisp file that called this
 function."
-  (let* ((day (s-chop-prefix "day" (f-base (buffer-file-name))))
-         (input-file (s-append ".txt" day)))
-    (aoc--split-lines (f-read (f-join "inputs" input-file))
-                      modifiers)))
+  (aoc--split-lines (read-input) modifiers))
 
-(cl-defun read-sample-input-lines (&rest modifiers &key (override nil))
+(cl-defun read-sample-input-lines (&key modifiers override)
   "Read lines of locally defined sample-input lines"
   (when override
     (setq sample-input override))
   (aoc--split-lines sample-input modifiers))
 
 (defun sample-input-lines-ints ()
-  (read-sample-input-lines 'words 'nums))
+  (read-sample-input-lines :modifiers '(words nums)))
 
 (defun input-lines-ints ()
-  (read-input-lines 'words 'nums))
+  (read-input-lines :modifiers '(words nums)))
 
-(defun sample-lines (&optional override)
-  (read-sample-input-lines :override override 'words))
+(cl-defun sample-lines (&key override)
+  (read-sample-input-lines :modifiers '(words) :override override))
 
 (defun input-lines ()
   (read-sample-input-lines 'words))
