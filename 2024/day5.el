@@ -69,39 +69,29 @@
   (--map (-map-when #'listp #'cadr it)
          (-group-by #'car (car parsed-input))))
 
-(defun fix-update (rules update)
-  (--sort (memq other (alist-get it rules)) update))
-
-(defun valid-update-p (rules update)
-  (->> update
-       (fix-update rules)
-       (equal update)))
+(defun fix-update-p (rules update)
+  "Returns cons of whether the update was fixed with the final update."
+  (--> update
+       (--sort (memq other (alist-get it rules)) it)
+       (cons (not (equal update it)) it)))
 
 (defun middle-value (lst)
   (nth (/ (length lst) 2) lst))
 
-(defun solve-1 (input)
+(defun solve (input &optional fix)
   (--> (parse input)
-       (-filter (-partial #'valid-update-p (rules-alist it))
-                (cadr it))
+       (-map
+        (-partial #'fix-update-p (rules-alist it))
+        (cadr it))
+       (--filter (eq (car it) fix) it)
        (-map #'middle-value it)
        (-sum it)))
 
-(defun solve-2 (input)
-  (let* ((parsed (parse input))
-         (rules (rules-alist parsed))
-         (updates (cadr parsed)))
-    (->> updates
-         (-filter (-partial (-compose #'not #'valid-update-p) rules))
-         (-map (-compose #'middle-value
-                         (-partial #'fix-update rules)))
-         (-sum))))
+(solve sample-input) ; 143
+(solve (read-input)) ;
 
-(solve-1 sample-input) ; 143
-(solve-1 (read-input)) ;
-
-(solve-2 sample-input) ; 123
-(solve-2 (read-input)) ;
+(solve sample-input t) ; 123
+(solve (read-input) t) ;
 
 (provide 'day5)
 ;;; day5.el ends here
