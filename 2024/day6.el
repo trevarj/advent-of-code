@@ -74,10 +74,10 @@ its coordinate."
 
 (defun turn-right (dir x y)
   (pcase dir
-    (?^ `(?> ,(1+ x) ,y))
-    (?v `(?< ,(1- x) ,y))
-    (?> `(?v ,x ,(1+ y)))
-    (?< `(?^ ,x ,(1- y)))))
+    (?^ ?>)
+    (?v ?<)
+    (?> ?v)
+    (?< ?^)))
 
 (defun go-straight (dir x y)
   (pcase dir
@@ -89,10 +89,11 @@ its coordinate."
 (defun find-next-position (guard table)
   (-let* (((dir x y) guard)
           ((straight &as _ sx sy) (go-straight dir x y))
-          (right (turn-right dir x y)))
+          (rdir (turn-right dir x y)))
     (cond
      ((outside-map-p sx sy table) nil)
-     ((hit-obstacle-p sx sy table) right)
+     ((hit-obstacle-p sx sy table)
+      (find-next-position `(,rdir ,x ,y) table))
      (t straight))))
 
 (defun guard-patrol (guard table)
@@ -124,10 +125,10 @@ its coordinate."
              ;; do (when (eq :loop patrol) (message "%s\n%s\n" patrol (s-join "\n" new-map)))
              count (eq :loop patrol))))
 
-(solve-1 (read-sample-input-lines))
-(solve-1 (read-input-lines))
+(solve-1 (read-sample-input-lines)) ; 41
+(solve-1 (read-input-lines)) ; 5080
 
-(solve-2 (read-sample-input-lines))
+(solve-2 (read-sample-input-lines)) ; 6
 (solve-2 (read-input-lines))
 
 (provide 'day6)
