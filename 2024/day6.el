@@ -52,6 +52,9 @@ its coordinate."
 (defun table-get (x y table)
   (nth x (nth y table)))
 
+(defun table-replace (elem x y table)
+  (-replace-at y (-replace-at x elem (nth y table)) table))
+
 (defun obstacle-p (elem)
   (eq elem ?#))
 
@@ -85,8 +88,8 @@ its coordinate."
 
 (defun find-next-position (guard table)
   (-let* (((dir x y) guard)
-          ((straight &as sdir sx sy) (go-straight dir x y))
-          ((right &as rdir rx ry) (turn-right dir x y)))
+          ((straight &as _ sx sy) (go-straight dir x y))
+          (right (turn-right dir x y)))
     (cond
      ((outside-map-p sx sy table) nil)
      ((hit-obstacle-p sx sy table) right)
@@ -95,10 +98,11 @@ its coordinate."
 (defun guard-patrol (guard table)
   (cl-loop for next = (find-next-position next table)
            while next
-           collect next into seen
+           if (member next path) return :loop
+           else collect next into path
            with next = guard
-           with seen = (list guard)
-           finally return seen))
+           with path = (list guard)
+           finally return path))
 
 (defun parse (lines)
   (-map #'string-to-list lines))
@@ -108,10 +112,23 @@ its coordinate."
          (guard (find-guard map)))
     (length (-distinct (-map #'cdr (guard-patrol guard map))))))
 
-(defun solve-2 (input))
+(defun solve-2 (input)
+  (let* ((map (parse input))
+         (guard (find-guard map))
+         (path (-distinct (-map #'cdr (guard-patrol guard map)))))
+    (cl-loop for idx from 1
+             for (x y) in (cdr path)
+             for new-map = (table-replace ?# x y map)
+             for patrol = (guard-patrol guard new-map)
+             do (message "%s/%s" idx (length path))
+             ;; do (when (eq :loop patrol) (message "%s\n%s\n" patrol (s-join "\n" new-map)))
+             count (eq :loop patrol))))
 
 (solve-1 (read-sample-input-lines))
 (solve-1 (read-input-lines))
+
+(solve-2 (read-sample-input-lines))
+(solve-2 (read-input-lines))
 
 (provide 'day6)
 ;;; day6.el ends here
