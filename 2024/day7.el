@@ -26,6 +26,8 @@
 
 (require 'aoc-2024)
 (require 'dash)
+(require 's)
+(require 'memoize)
 
 (defvar sample-input "190: 10 19
 3267: 81 40 27
@@ -37,27 +39,40 @@
 21037: 9 7 18 13
 292: 11 6 16 20")
 
-(defun traverse (acc nums)
+(defun concat-nums (a b)
+  (string-to-number
+   (s-concat (number-to-string a) (number-to-string b))))
+
+(memoize 'traverse)
+(defun traverse (ops acc nums)
   (if (not nums)
       acc
     (let ((next (car nums))
           (rest (cdr nums)))
-      (-flatten (list (traverse (+ acc next) rest)
-                      (traverse (* acc next) rest))))))
+      (-flatten (--map
+                 (traverse ops (funcall it acc next) rest)
+                 ops)))))
 
-(defun solve-equation (target nums)
-  (->> (traverse (car nums) (cdr nums))
+(defun solve-equation (ops target nums)
+  (->> (traverse ops (car nums) (cdr nums))
        (--find (eq target it))))
 
-(defun solve-1 (input)
-  (->> (--map (solve-equation (car it) (cdr it)) input)
+(defun solve (input ops)
+  (->> (--map (solve-equation ops (car it) (cdr it)) input)
        (-flatten)
        (-sum)))
 
-(defun solve-2 (input))
+(defun solve-1 (input)
+  (solve input '(+ *)))
+
+(defun solve-2 (input)
+  (solve input '(+ * concat-nums)))
 
 (solve-1 (sample-input-lines-ints)) ; 3749
 (solve-1 (input-lines-ints))
+
+(solve-2 (sample-input-lines-ints)) ; 11387
+(solve-2 (input-lines-ints)) ; long time!
 
 (provide 'day7)
 ;;; day7.el ends here
