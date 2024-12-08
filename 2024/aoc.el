@@ -48,7 +48,7 @@
          (input-file (s-append ".txt" day)))
     (f-read (f-join "inputs" input-file))))
 
-(defun read-input-lines (&rest modifiers)
+(cl-defun read-input-lines (&key modifiers)
   "Read lines of input file for corresponding lisp file that called this
 function."
   (aoc--split-lines (read-input) modifiers))
