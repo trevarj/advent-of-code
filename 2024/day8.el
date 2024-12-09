@@ -78,11 +78,6 @@
     (`((,x1 ,y1) . (,x2 ,y2)) (list (- x1 x2)
                                     (- y1 y2)))))
 
-(cl-loop for n = (add-vec '(1 1) n)
-         with n = '(1 1)
-         while (not (outside-map-p n 12))
-         collect n)
-
 (defun proliferate-antinode (node d map-dim &optional limit)
   (cl-loop for n = (add-vec d n)
            for i from 0
