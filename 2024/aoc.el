@@ -87,5 +87,8 @@ function."
 
 (defun solve-2 (input))")))
 
+(defun table-replace (elem x y table)
+  (-replace-at y (-replace-at x elem (nth y table)) table))
+
 (provide 'aoc-2024)
 ;;; aoc.el ends here
