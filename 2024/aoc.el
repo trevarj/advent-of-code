@@ -62,6 +62,32 @@ function."
 (defun sample-input-lines-ints ()
   (read-sample-input-lines :modifiers '(words nums)))
 
+(defun table (lines &optional char-mapper)
+  (->> (-map #'string-to-list lines)
+       (--map (-map (or char-mapper #'identity) it))))
+
+(defun int-table (lines)
+  (table lines (-partial #'+ -48)))
+
+(defun sample-input-int-table ()
+  (int-table (read-sample-input-lines)))
+
+(defun input-int-table ()
+  (int-table (read-input-lines)))
+
+(defun grid (table &optional char-mapper)
+  (->> (--map (apply #'vector it) table)
+       (apply #'vector)))
+
+(defun int-grid (lines)
+  (grid lines (-partial #'+ -48)))
+
+(defun sample-input-int-grid ()
+  (int-grid (read-sample-input-lines)))
+
+(defun input-int-grid ()
+  (int-grid (read-input-lines)))
+
 (defun input-lines-ints ()
   (read-input-lines :modifiers '(words nums)))
 
