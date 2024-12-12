@@ -55,9 +55,7 @@ function."
 
 (cl-defun read-sample-input-lines (&key modifiers override)
   "Read lines of locally defined sample-input lines"
-  (when override
-    (setq sample-input override))
-  (aoc--split-lines sample-input modifiers))
+  (aoc--split-lines (or override sample-input) modifiers))
 
 (defun sample-input-lines-ints ()
   (read-sample-input-lines :modifiers '(words nums)))
@@ -115,6 +113,38 @@ function."
 
 (defun table-replace (elem x y table)
   (-replace-at y (-replace-at x elem (nth y table)) table))
+
+;; Graphs
+(defun nodes (table)
+  "Returns list of nodes, each being ((x y) val)"
+  (->> table
+       (-map-indexed
+        (lambda (y row)
+          (-map-indexed
+           (lambda (x val)
+             `((,x ,y) ,val))
+           row)))
+       (-flatten-n 1)))
+
+(defun neighbors (graph node &optional pred)
+  "Return a list of nodes that are the neighbors to given node."
+  (-let ((((x y) val) node))
+    (->> (-zip-with #'add-pairs
+                    (-repeat 4 `(,x ,y))
+                    '((-1 0) (1 0) (0 -1) (0 1)))
+         (--map (assoc it graph))
+         (--filter (and it (funcall (or pred #'identity) it))))))
+
+(defun add-pairs (a b)
+  "(+ (ax ay) (bx by) => ((+ ax bx) (ay by))"
+  (-zip-with #'+ a b))
+
+(defun adjacent (a b)
+  "True if two coordinates are adjacent on a grid"
+  (-let (((x1 y1) a)
+         ((x2 y2) b))
+    (or (and (eq x1 x2) (eq 1 (abs (- y1 y2))))
+        (and (eq y1 y2) (eq 1 (abs (- x1 x2)))))))
 
 (provide 'aoc-2024)
 ;;; aoc.el ends here
