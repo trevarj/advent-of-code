@@ -4,7 +4,7 @@
 
 ;; Author: Trevor Arjeski <tmarjeski@gmail.com>
 ;; Version: 1.0.0
-;; Package-Requires: ((dash "2.19.1) (f "0.21.0") (s "1.13.0"))
+;; Package-Requires: ((dash "2.19.1) (f "0.21.0") (s "1.13.0") (ht "2.3")
 ;; Keywords: lisp, games
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -126,11 +126,11 @@ function."
 (defun neighbors (graph node &optional pred)
   "Return a list of nodes that are the neighbors to given node."
   (-let ((((x y) val) node))
-    (->> (-zip-with #'add-pairs
-                    (-repeat 4 `(,x ,y))
-                    '((-1 0) (1 0) (0 -1) (0 1)))
-         (--map (assoc it graph))
-         (--filter (and it (funcall (or pred #'identity) it))))))
+        (->> (-zip-with #'add-pairs
+                        (-repeat 4 `(,x ,y))
+                        '((-1 0) (1 0) (0 -1) (0 1)))
+             (--map (assoc it graph))
+             (--filter (and it (funcall (or pred #'identity) it))))))
 
 (defun add-pairs (a b)
   "(+ (ax ay) (bx by) => ((+ ax bx) (+ ay by))"
@@ -140,8 +140,8 @@ function."
   "True if two coordinates are adjacent on a grid"
   (-let (((x1 y1) a)
          ((x2 y2) b))
-    (or (and (eq x1 x2) (eq 1 (abs (- y1 y2))))
-        (and (eq y1 y2) (eq 1 (abs (- x1 x2)))))))
+        (or (and (eq x1 x2) (eq 1 (abs (- y1 y2))))
+            (and (eq y1 y2) (eq 1 (abs (- x1 x2)))))))
 
 (provide 'aoc-2024)
 ;;; aoc.el ends here
