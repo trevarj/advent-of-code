@@ -73,12 +73,9 @@ function."
 (defun input-int-table ()
   (int-table (read-input-lines)))
 
-(defun grid (table &optional char-mapper)
+(defun grid (table)
   (->> (--map (apply #'vector it) table)
        (apply #'vector)))
-
-(defun int-grid (lines)
-  (grid lines (-partial #'+ -48)))
 
 (defun sample-input-int-grid ()
   (int-grid (read-sample-input-lines)))
@@ -98,7 +95,7 @@ function."
 (defun aoc-2024-generate-day (day)
   (interactive (list (read-number "Day: " (car aoc-day-level))))
   (with-current-buffer (find-file (format "day%d.el" day))
-    (goto-line 26)
+    (forward-line 26)
     (insert "
 (require 'aoc-2024)
 (require 'dash)
@@ -136,7 +133,7 @@ function."
          (--filter (and it (funcall (or pred #'identity) it))))))
 
 (defun add-pairs (a b)
-  "(+ (ax ay) (bx by) => ((+ ax bx) (ay by))"
+  "(+ (ax ay) (bx by) => ((+ ax bx) (+ ay by))"
   (-zip-with #'+ a b))
 
 (defun adjacent (a b)
