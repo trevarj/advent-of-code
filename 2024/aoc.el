@@ -84,6 +84,9 @@ function."
 (defun aref-grid (grid x y)
   (aref (aref grid y) x))
 
+(defun display-grid (grid)
+  (s-join "\n" (seq-map #'concat grid)))
+
 (defun sample-input-int-grid ()
   (int-grid (read-sample-input-lines)))
 
