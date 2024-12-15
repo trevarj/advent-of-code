@@ -73,12 +73,16 @@ function."
 (defun input-int-table ()
   (int-table (read-input-lines)))
 
-(defun grid (table)
-  (->> (--map (apply #'vector it) table)
+(defun grid (lines &optional char-mapper)
+  (->> (table lines char-mapper)
+       (--map (apply #'vector it))
        (apply #'vector)))
 
-(defun aref-grid (grid x y elt)
+(defun setf-grid (grid x y elt)
   (setf (aref (aref grid y) x) elt))
+
+(defun aref-grid (grid x y)
+  (aref (aref grid y) x))
 
 (defun sample-input-int-grid ()
   (int-grid (read-sample-input-lines)))
@@ -101,7 +105,6 @@ function."
     (goto-line 26)
     (insert "
 (require 'aoc-2024)
-(require 'dash)
 
 (defvar sample-input \"\")
 
