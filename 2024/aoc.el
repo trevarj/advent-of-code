@@ -145,6 +145,10 @@ function."
   "(+ (ax ay) (bx by) => ((+ ax bx) (+ ay by))"
   (-zip-with #'+ a b))
 
+(defun sub-pairs (a b)
+  "(- (ax ay) (bx by) => ((- ax bx) (- ay by))"
+  (-zip-with #'- a b))
+
 (defun adjacent (a b)
   "True if two coordinates are adjacent on a grid"
   (-let (((x1 y1) a)
