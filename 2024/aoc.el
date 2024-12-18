@@ -141,6 +141,45 @@ function."
          (--map (assoc it graph))
          (--filter (and it (funcall (or pred #'identity) it))))))
 
+(defun node-dist-cmp (dists a b)
+  (> (ht-get dists a)
+     (ht-get dists b)))
+
+(defun dijkstra (grid source target)
+  (let ((dists (ht-create))
+        (prev (ht-create))
+        (U '()))
+    (-each grid
+      (lambda (n)
+        (ht-set dists n (if (equal (car n) source) 0 most-positive-fixnum))
+        (ht-set prev (car n) nil)
+        (push n U)))
+
+    (catch 'done
+      (while-let (((not (seq-empty-p U)))
+                  (curr (-min-by (-partial #'node-dist-cmp dists) U)))
+
+        (when (or (equal (car curr) target)
+                  (eq most-positive-fixnum (ht-get dists curr)))
+          (throw 'done nil))
+
+        (-each (neighbors grid curr (lambda (x) (not (eq (cadr x) ?#))))
+          (lambda (n)
+            (when-let* (((member n U))
+                        (new-dist (1+ (ht-get dists curr)))
+                        ((< new-dist (ht-get dists n))))
+              (ht-set dists n new-dist)
+              (ht-set prev (car n) (car curr)))))
+
+        (setq U (-remove-item curr U))))
+
+    (named-let reconstruct ((path '()) (curr target))
+      (if curr
+          (reconstruct (cons curr path) (ht-get prev curr))
+        (if (equal source (car path))
+            path
+          nil)))))
+
 (defun add-pairs (a b)
   "(+ (ax ay) (bx by) => ((+ ax bx) (+ ay by))"
   (-zip-with #'+ a b))

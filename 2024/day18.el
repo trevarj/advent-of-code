@@ -53,60 +53,15 @@
 1,6
 2,0")
 
-(defun drop-bytes (grid bytes w h n)
+(defun drop-bytes (grid bytes n)
   (-reduce-from
    (-lambda (g (x y))
      (-update-at y (-partial #'-update-at x (-const ?#)) g))
    grid (-take n bytes)))
 
-(defun point-distance (a b)
-  (-let (((x1 y1) a)
-         ((x2 y2) b))
-    (sqrt (+ (expt (- x2 x1) 2)
-             (expt (- y2 y1) 2)))))
-
-(defun node-dist-cmp (dists a b)
-  (> (ht-get dists a)
-     (ht-get dists b)))
-
-(defun dijkstra (grid source target)
-  (let ((dists (ht-create))
-        (prev (ht-create))
-        (U '()))
-    (-each grid
-      (lambda (n)
-        (ht-set dists n (if (equal (car n) source) 0 most-positive-fixnum))
-        (ht-set prev (car n) nil)
-        (push n U)))
-
-    (catch 'done
-      (while-let (((not (seq-empty-p U)))
-                  (curr (-min-by (-partial #'node-dist-cmp dists) U)))
-
-        (when (or (equal (car curr) target)
-                  (eq most-positive-fixnum (ht-get dists curr)))
-          (throw 'done nil))
-
-        (-each (neighbors grid curr (lambda (x) (not (eq (cadr x) ?#))))
-          (lambda (n)
-            (when-let* (((member n U))
-                        (new-dist (1+ (ht-get dists curr)))
-                        ((< new-dist (ht-get dists n))))
-              (ht-set dists n new-dist)
-              (ht-set prev (car n) (car curr)))))
-
-        (setq U (-remove-item curr U))))
-
-    (named-let reconstruct ((path '()) (curr target))
-      (if curr
-          (reconstruct (cons curr path) (ht-get prev curr))
-        (if (equal source (car path))
-            path
-          nil)))))
-
 (defun solve-1 (input w h n target)
   (let* ((grid (make-list h (make-list w ?.)))
-         (graph (drop-bytes grid input w h n)))
+         (graph (drop-bytes grid input n)))
     (1- (length (dijkstra (nodes graph) '(0 0) target)))))
 
 (defun solve-2 (input w h n target)
@@ -116,7 +71,7 @@
     (while-let (((< low high))
                 (mid (/ (+ high low) 2))
                 (grid (make-list h (make-list w ?.)))
-                (nodes (nodes (drop-bytes grid input w h mid))))
+                (nodes (nodes (drop-bytes grid input mid))))
       (let ((res (dijkstra nodes '(0 0) target)))
         ;; (message "low %s high %s mid %s" low high mid)
         (if res
