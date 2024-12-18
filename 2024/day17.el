@@ -52,7 +52,7 @@ Program: 0,1,5,4,3,0")
 (defun interpret (regs op operand)
   (pcase op
     (0 (setf (aref regs 0)
-             (/ (aref regs 0) (expt 2 (combo-operand regs operand)))))
+             (ash (aref regs 0) (- (combo-operand regs operand)))))
     (1 (setf (aref regs 1)
              (logxor (aref regs 1) operand)))
     (2 (setf (aref regs 1)
@@ -63,9 +63,9 @@ Program: 0,1,5,4,3,0")
              (logxor (aref regs 1) (aref regs 2))))
     (5 (setf (aref regs 4) (mod (combo-operand regs operand) 8)))
     (6 (setf (aref regs 1)
-             (/ (aref regs 0) (expt 2 (combo-operand regs operand)))))
+             (ash (aref regs 0) (- (combo-operand regs operand)))))
     (7 (setf (aref regs 2)
-             (/ (aref regs 0) (expt 2 (combo-operand regs operand)))))))
+             (ash (aref regs 0) (- (combo-operand regs operand)))))))
 
 (defun combo-operand (regs operand)
   (pcase operand
@@ -81,28 +81,41 @@ Program: 0,1,5,4,3,0")
               (_ (< ip (length program))))
         (progn
           (interpret regs (aref program ip) (aref program (1+ ip)))
-          (when-let ((val (aref regs 4))) (push val out))
+          (when-let* ((val (aref regs 4))) (push val out))
           (setf (aref regs 4) nil) ; clear out register
           (setf (aref regs 3) (+ 2 (aref regs 3))) ; inc IP
           (run regs out))
-      (message "regs: %s" regs)
-      (nreverse (s-join "," (-map #'number-to-string out))))))
+      (nreverse out))))
 
 (defun solve (input)
   (-let (((regs program) (parse input)))
-    (run-program regs program)))
+    (s-join "," (-map #'number-to-string (run-program regs program)))))
 
 (defun solve-1 (input)
   (solve input))
 
-(defun solve-2 (input))
+(defun find (program)
+  (cl-block loop
+    (named-let f ((prog-list (seq-into program 'list))
+                  (a 0)
+                  (i 0))
+      (let ((res (run-program `[,a 0 0] program))
+            (sub (seq-subseq prog-list (- i))))
+        (if (equal res prog-list)
+            (cl-return-from loop a)
+          (when (or (equal res sub)
+                    (= i 0))
+            (dotimes (n 8)
+              (f prog-list (+ (* 8 a) n) (1+ i)))))))))
+
+(defun solve-2 (input)
+  (-let* (((_ program) (parse input)))
+    (find program)))
 
 (solve-1 (read-sample-input-lines)) ; 4,6,3,5,6,3,5,2,1,0
-(run-program [10 0 0] [5 0 5 1 5 4]) ; 0,1,2
-(run-program [2024 0 0] [0 1 5 4 3 0]) ; 4,2,5,6,7,7,7,7,3,1,0
-(run-program [0 0 9] [2 6])  ; reg B = 1
-(run-program [0 29 0] [1 7]) ; reg B = 26
 (solve-1 (read-input-lines))
+
+(solve-2 (read-input-lines))
 
 (provide 'day17)
 ;;; day17.el ends here
