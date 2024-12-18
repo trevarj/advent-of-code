@@ -100,18 +100,35 @@
     (named-let reconstruct ((path '()) (curr target))
       (if curr
           (reconstruct (cons curr path) (ht-get prev curr))
-        path))))
+        (if (equal source (car path))
+            path
+          nil)))))
 
 (defun solve-1 (input w h n target)
   (let* ((grid (make-list h (make-list w ?.)))
          (graph (drop-bytes grid input w h n)))
-    (message "%s" (display-grid graph))
     (1- (length (dijkstra (nodes graph) '(0 0) target)))))
 
-(defun solve-2 (input))
+(defun solve-2 (input w h n target)
+  (let* ((len (length input))
+         (high len)
+         (low n))
+    (while-let (((< low high))
+                (mid (/ (+ high low) 2))
+                (grid (make-list h (make-list w ?.)))
+                (nodes (nodes (drop-bytes grid input w h mid))))
+      (let ((res (dijkstra nodes '(0 0) target)))
+        ;; (message "low %s high %s mid %s" low high mid)
+        (if res
+            (setq low (1+ mid))
+          (setq high mid))))
+    (nth (1- low) input)))
 
 (solve-1 (sample-input-lines-ints) 7 7 12 '(6 6)) ; 22
 (solve-1 (input-lines-ints) 71 71 1024 '(70 70))
+
+(solve-2 (sample-input-lines-ints) 7 7 12 '(6 6)) ; (6 1)
+(solve-2 (input-lines-ints) 71 71 1024 '(70 70))
 
 (provide 'day18)
 ;;; day18.el ends here
