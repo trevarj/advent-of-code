@@ -87,6 +87,12 @@ function."
 (defun display-grid (grid)
   (s-join "\n" (seq-map #'concat grid)))
 
+(defun draw-points-on-table (table points ch &optional n)
+  (-reduce-from
+   (-lambda (g (x y))
+     (-update-at y (-partial #'-update-at x (-const ch)) g))
+   table (if n (-take n points) (length points))))
+
 (defun sample-input-int-grid ()
   (int-grid (read-sample-input-lines)))
 
@@ -132,6 +138,9 @@ function."
            row)))
        (-flatten-n 1)))
 
+(defun find-node (val nodes)
+  (-find (lambda (n) (eq (cadr n) val)) nodes))
+
 (defun neighbors (graph node &optional pred)
   "Return a list of nodes that are the neighbors to given node."
   (-let ((((x y) val) node))
@@ -145,11 +154,11 @@ function."
   (> (ht-get dists a)
      (ht-get dists b)))
 
-(defun dijkstra (grid source target)
+(defun dijkstra (nodes source target)
   (let ((dists (ht-create))
         (prev (ht-create))
         (U '()))
-    (-each grid
+    (-each nodes
       (lambda (n)
         (ht-set dists n (if (equal (car n) source) 0 most-positive-fixnum))
         (ht-set prev (car n) nil)
@@ -163,7 +172,8 @@ function."
                   (eq most-positive-fixnum (ht-get dists curr)))
           (throw 'done nil))
 
-        (-each (neighbors grid curr (lambda (x) (not (eq (cadr x) ?#))))
+        ;; TODO: make the lambda pred a parameter?
+        (-each (neighbors nodes curr (lambda (x) (not (eq (cadr x) ?#))))
           (lambda (n)
             (when-let* (((member n U))
                         (new-dist (1+ (ht-get dists curr)))
@@ -187,6 +197,27 @@ function."
 (defun sub-pairs (a b)
   "(- (ax ay) (bx by) => ((- ax bx) (- ay by))"
   (-zip-with #'- a b))
+
+(defun dir->vec (dir)
+  (pcase dir
+    (:up '(0 -1))
+    (:down '(0 1))
+    (:left '(-1 0))
+    (:right '(1 0))))
+
+(defun vec->dir (dir)
+  (pcase dir
+    ('(0 -1) :up)
+    ('(0 1) :down)
+    ('(-1 0) :left)
+    ('(1 0) :right)))
+
+(defun cmd->dir (cmd)
+  (pcase cmd
+    (?^ :up)
+    (?v :down)
+    (?< :left)
+    (?> :right)))
 
 (defun adjacent (a b)
   "True if two coordinates are adjacent on a grid"

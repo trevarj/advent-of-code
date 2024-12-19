@@ -53,15 +53,9 @@
 1,6
 2,0")
 
-(defun drop-bytes (grid bytes n)
-  (-reduce-from
-   (-lambda (g (x y))
-     (-update-at y (-partial #'-update-at x (-const ?#)) g))
-   grid (-take n bytes)))
-
 (defun solve-1 (input w h n target)
   (let* ((grid (make-list h (make-list w ?.)))
-         (graph (drop-bytes grid input n)))
+         (graph (draw-points-on-table grid input ?# n)))
     (1- (length (dijkstra (nodes graph) '(0 0) target)))))
 
 (defun solve-2 (input w h n target)
@@ -71,7 +65,7 @@
     (while-let (((< low high))
                 (mid (/ (+ high low) 2))
                 (grid (make-list h (make-list w ?.)))
-                (nodes (nodes (drop-bytes grid input mid))))
+                (nodes (nodes (draw-points-on-table grid input ?# mid))))
       (let ((res (dijkstra nodes '(0 0) target)))
         ;; (message "low %s high %s mid %s" low high mid)
         (if res
