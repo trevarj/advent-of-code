@@ -27,6 +27,8 @@
 ;;; Code:
 (require 'f)
 (require 's)
+(require 'dash)
+(require 'ht)
 
 (defun aoc--split-lines (input &optional modifiers)
   "Split lines with modifiers applied"
@@ -91,7 +93,7 @@ function."
   (-reduce-from
    (-lambda (g (x y))
      (-update-at y (-partial #'-update-at x (-const ch)) g))
-   table (if n (-take n points) (length points))))
+   table (-take (or n (length points)) points)))
 
 (defun sample-input-int-grid ()
   (int-grid (read-sample-input-lines)))
@@ -150,11 +152,21 @@ function."
          (--map (assoc it graph))
          (--filter (and it (funcall (or pred #'identity) it))))))
 
+(defun neighbors-directed (graph node &optional pred)
+  "Return a list of nodes that are the neighbors to given node."
+  (-let ((((x y) val) node))
+    (->> (-zip-with #'add-pairs
+                    (-repeat 4 `(,x ,y))
+                    '((-1 0) (1 0) (0 -1) (0 1)))
+         (--map (assoc it graph))
+         (funcall (-flip #'-zip) '(:left :right :up :down))
+         (--filter (and it (car it) (funcall (or pred #'identity) it))))))
+
 (defun node-dist-cmp (dists a b)
   (> (ht-get dists a)
      (ht-get dists b)))
 
-(defun dijkstra (nodes source target)
+(defun dijkstra (nodes source target &optional dist-cmp)
   (let ((dists (ht-create))
         (prev (ht-create))
         (U '()))
