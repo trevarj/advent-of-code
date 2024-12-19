@@ -42,38 +42,77 @@
 #S..#.....#...#
 ###############")
 
-(defun dfs (nodes start target)
-  (named-let rec ((visited '())
-                  (score 0)
-                  (curr start)
-                  (dir :right)
-                  )
-    (unless (member curr visited)
-      (push curr visited)
-      (if (equal curr target)
-          score
-        (when-let*
-            ((ss (->> (neighbors-directed nodes curr (lambda (x) (not (eq (cadar x) ?#))))
-                      (-map
-                       (-lambda ((n . d))
-                         (when-let* ((s (rec visited (+ score (if (eq dir d) 1 1000)) n d)))
-                           s)))
-                      (-non-nil))))
-          (-min ss))))))
+(defvar sample-input-2 "#################
+#...#...#...#..E#
+#.#.#.#.#.#.#.#.#
+#.#.#.#...#...#.#
+#.#.#.#.###.#.#.#
+#...#.#.#.....#.#
+#.#.#.#.#.#####.#
+#.#...#.#.#.....#
+#.#.#####.#.###.#
+#.#.#.......#...#
+#.#.###.#####.###
+#.#.#...#.....#.#
+#.#.#.#####.###.#
+#.#.#.........#.#
+#.#.#.#########.#
+#S#.............#
+#################")
 
-(let* ((table (table (read-sample-input-lines)))
-       (nodes (nodes table))
-       (S (find-node ?S nodes))
-       (E (find-node ?E nodes))
-       (score (dfs nodes S E))
-       )
-  score
-  )
-(cada)
-(car (cdr (car '(((0 13) 35) . :left))))
-(defun solve-1 (input))
+(defun dijkstra (nodes source target)
+  (let ((dists (ht-create))
+        (prev (ht-create))
+        (dir (ht-create))
+        (U '()))
+    (-each nodes
+      (lambda (n)
+        (ht-set dists n (if (equal (car n) source) 0 most-positive-fixnum))
+        (ht-set prev (car n) nil)
+        (ht-set dir n :right)
+        (push n U)))
+
+    (catch 'done
+      (while-let (((not (seq-empty-p U)))
+                  (curr (-min-by (-partial #'node-dist-cmp dists) U)))
+
+        (when (or (equal (car curr) target)
+                  (eq most-positive-fixnum (ht-get dists curr)))
+          (throw 'done nil))
+
+        ;; TODO: make the lambda pred a parameter?
+        (-each (neighbors-directed nodes curr (lambda (x) (not (eq (cadar x) ?#))))
+          (-lambda ((n . d))
+            (when-let* (((member n U))
+                        (curr-dir (ht-get dir curr))
+                        (dir-cost (if (eq curr-dir d) 1 1001))
+                        (new-dist (+ (ht-get dists curr) dir-cost))
+                        ((< new-dist (ht-get dists n))))
+              (ht-set dists n new-dist)
+              (ht-set prev (car n) (car curr))
+              (ht-set dir n d))))
+
+        (setq U (-remove-item curr U))))
+
+    (named-let reconstruct ((path '()) (curr target))
+      (if curr
+          (reconstruct (cons curr path) (ht-get prev curr))
+        (if (equal source (car path))
+            (list path (ht-get dists (list target ?E)))
+          nil)))))
+
+(defun solve-1 (input)
+  (let* ((table (table input))
+         (nodes (nodes table))
+         (S (car (find-node ?S nodes)))
+         (E (car (find-node ?E nodes)))
+         (path (dijkstra nodes S E)))
+    (cadr path)))
 
 (defun solve-2 (input))
+
+(solve-1 (read-sample-input-lines)) ; 7036
+(solve-1 (read-input-lines))
 
 (provide 'day16)
 ;;; day16.el ends here
