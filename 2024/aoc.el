@@ -166,7 +166,7 @@ function."
   (> (ht-get dists a)
      (ht-get dists b)))
 
-(defun dijkstra (nodes source target &optional dist-cmp)
+(defun dijkstra (nodes source target)
   (let ((dists (ht-create))
         (prev (ht-create))
         (U '()))
