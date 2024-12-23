@@ -238,5 +238,31 @@ function."
     (or (and (eq x1 x2) (eq 1 (abs (- y1 y2))))
         (and (eq y1 y2) (eq 1 (abs (- x1 x2)))))))
 
+(defun combinations (lst r)
+  "Python itertools combinations(lst, r)"
+  (let ((indices (seq-into (number-sequence 0 (1- r)) 'vector))
+        (lst (seq-into lst 'vector))
+        (n (length lst))
+        (combos '()))
+    (when (<= r (length lst))
+      (push (mapcar (lambda (i) (aref lst i)) indices) combos)
+      (catch 'done
+        (while-let ((t)
+                    (i (1- r)))
+
+          (named-let rev ()
+            (cond
+             ((not (eq (aref indices i) (- (+ i n) r))))
+             ((<= i 0) (throw 'done combos))
+             (t (setf i (1- i)) (rev))))
+
+          (setf (aref indices i) (1+ (aref indices i)))
+
+          (named-let inc ((j (1+ i)))
+            (when (< j r)
+              (setf (aref indices j) (1+ (aref indices (1- j))))
+              (inc (1+ j))))
+          (push (mapcar (lambda (i) (aref lst i)) indices) combos))))))
+
 (provide 'aoc-2024)
 ;;; aoc.el ends here
