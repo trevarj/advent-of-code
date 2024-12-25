@@ -231,6 +231,9 @@ function."
     (?< :left)
     (?> :right)))
 
+(defun cmd->vec (cmd)
+  (dir->vec (cmd->dir cmd)))
+
 (defun adjacent (a b)
   "True if two coordinates are adjacent on a grid"
   (-let (((x1 y1) a)
