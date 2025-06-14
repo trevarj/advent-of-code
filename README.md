@@ -19,6 +19,9 @@ Trying to have a fun and cozy time. Using the great library
 [dash.el](https://github.com/magnars/dash.el) and not going for efficient
 solutions until Emacs locks up and crashes.
 
+## 2025: 
+  - [Factor](https://factorcode.org/) ?
+
 ### Thanks
 Thank you to the following people for help and inspiration:
   - [glguy](https://github.com/glguy/advent)
