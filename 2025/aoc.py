@@ -8,7 +8,7 @@ def int_parser(lines):
     return [list(map(int, line.split())) for line in lines if line]
 
 
-def read_input(parser=int_parser):
+def read_input(parser=None):
     """
     Automatically read the AoC input corresponding to the calling file.
     """
@@ -18,7 +18,10 @@ def read_input(parser=int_parser):
 
     input_path = Path("inputs") / f"{day}.txt"
     lines = input_path.read_text().rstrip("\n").splitlines()
-    return parser(lines)
+    if callable(parser):
+        return parser(lines)
+    else:
+        return lines
 
 
 def generate_days(days=12):
