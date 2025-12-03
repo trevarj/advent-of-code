@@ -2,11 +2,20 @@ import inspect
 import os
 import re
 from pathlib import Path
+from functools import partial
 
 
 def int_parser(lines):
     """Split into lines and convert each line to a list of ints."""
     return [list(map(int, line.split())) for line in lines if line]
+
+
+def re_parse(rx, line):
+    gs = re.match(rx, line).groups()
+    if gs:
+        return gs
+    else:
+        return re.findall(rx, line)
 
 
 def read_input(parser=None, splitter="\n", input=None):
@@ -28,7 +37,7 @@ def read_input(parser=None, splitter="\n", input=None):
     if callable(parser):
         return parser(splits)
     elif isinstance(parser, str):
-        return [re.match(parser, line).groups() for line in splits]
+        return list(map(partial(re_parse, parser), splits))
     else:
         return splits
 
