@@ -18,12 +18,14 @@ def re_parse(rx, line):
         return re.findall(rx, line)
 
 
-def read_input(parser=None, splitter="\n", input=None):
+def read_input(parser=None, splitter="\n", mapper=lambda x: x, input=None):
     """
     Automatically read the AoC input corresponding to the calling file.
 
     Parser can be a function that takes a list of strings (lines), or a regex
     string which will be matched upon and a tuple of the groups is returned.
+
+    Mapper will be applied to each line after parsing.
     """
     if input is None:
         filename = inspect.stack()[1].filename
@@ -35,11 +37,11 @@ def read_input(parser=None, splitter="\n", input=None):
     else:
         splits = input.rstrip("\n").split(splitter)
     if callable(parser):
-        return parser(splits)
+        return list(map(mapper, parser(splits)))
     elif isinstance(parser, str):
         return list(map(partial(re_parse, parser), splits))
     else:
-        return splits
+        return list(map(mapper, splits))
 
 
 def generate_days(days=12):
