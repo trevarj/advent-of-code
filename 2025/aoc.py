@@ -11,11 +11,21 @@ def int_parser(lines):
 
 
 def re_parse(rx, line):
-    gs = re.match(rx, line).groups()
-    if gs:
-        return gs
+    matched = re.match(rx, line)
+    if matched and matched.groups():
+        return matched.groups()
     else:
         return re.findall(rx, line)
+
+
+def split_rec(s, splitters):
+    if not splitters:
+        return s
+    splitter = splitters[0]
+    parts = [p for p in s.split(splitter) if p]
+    if len(parts) == 1:
+        return s
+    return [split_rec(p, splitters[1:]) for p in parts]
 
 
 def read_input(parser=None, splitter="\n", mapper=lambda x: x, input=None):
@@ -33,15 +43,23 @@ def read_input(parser=None, splitter="\n", mapper=lambda x: x, input=None):
         day = caller_path.stem
 
         input_path = Path("inputs") / f"{day}.txt"
-        splits = input_path.read_text().rstrip("\n").split(splitter)
+        text = input_path.read_text().rstrip("\n")
     else:
-        splits = input.rstrip("\n").split(splitter)
+        text = input.rstrip("\n")
+
+    if isinstance(splitter, list):
+        splits = split_rec(text, splitter)
+    else:
+        splits = text.split(splitter)
+
+    results = None
     if callable(parser):
-        return list(map(mapper, parser(splits)))
+        results = parser(splits)
     elif isinstance(parser, str):
-        return list(map(partial(re_parse, parser), splits))
+        results = map(partial(re_parse, parser), splits)
     else:
-        return list(map(mapper, splits))
+        results = splits
+    return list(filter(lambda x: x or x, map(mapper, results)))
 
 
 def generate_days(days=12):
