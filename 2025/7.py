@@ -11,29 +11,19 @@ def to_nodes(grid):
     return d
 
 
-def solve1():
-    data = read_input(mapper=list)
-    beams = {data[0].index("S")}
-    splits = 0
-    for line in data[1:]:
-        for b in list(beams):
-            if line[b] == "^":
-                splits += 1
-                beams.remove(b)
-                beams.update([b + 1, b - 1])
-    return splits
-
-
-def solve2():
+def solve():
     data = read_input(mapper=list)
     start = (0, data[0].index("S"))
     nodes = to_nodes(data)
+    splits = 0
 
     @cache
     def split_timeline(b):
         x, y = b
         node = nodes[x, y]
         if node == "^":
+            nonlocal splits
+            splits += 1
             left = split_timeline((x + 1, y - 1))
             right = split_timeline((x + 1, y + 1))
             return left + right
@@ -41,8 +31,8 @@ def solve2():
             return split_timeline((x + 1, y))
         return 1
 
-    return split_timeline(start)
+    part2 = split_timeline(start)
+    return splits, part2
 
 
-print(solve1())
-print(solve2())
+print(solve())
