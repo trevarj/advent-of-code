@@ -35,3 +35,5 @@ Thank you to the following people for help and inspiration:
   - [glguy](https://github.com/glguy/advent)
   - [mbottini](https://github.com/mbottini/AOC2023)
   - [byorgey](https://github.com/byorgey/AoC)
+  - [4HbQ](https://www.reddit.com/user/4HbQ/)
+  - [fuglede](https://github.com/fuglede/adventofcode)

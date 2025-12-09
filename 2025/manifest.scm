@@ -7,4 +7,5 @@
  (list python
        python-black
        python-lsp-server
-       python-lsp-black))
+       python-lsp-black
+       python-shapely))
